@@ -2,18 +2,18 @@
 
 namespace halumein\consumption\controllers;
 
-use Yii;
 use halumein\consumption\models\Resource;
-use halumein\consumption\models\search\ResourceSearch;
-use yii\data\ActiveDataProvider;
+use Yii;
+use halumein\consumption\models\Norm;
+use halumein\consumption\models\search\NormSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * ResourceController implements the CRUD actions for Resource model.
+ * NormController implements the CRUD actions for Norm model.
  */
-class ResourceController extends Controller
+class NormController extends Controller
 {
     public function behaviors()
     {
@@ -28,22 +28,13 @@ class ResourceController extends Controller
     }
 
     /**
-     * Lists all Resource models.
+     * Lists all Norm models.
      * @return mixed
      */
     public function actionIndex()
     {
-
-        //$serviceModel = $this->module->serviceModel;
-
-        //$services = $serviceModel::find()->all();
-        //var_dump($this->module);
-        //die;
-
-        $searchModel = new ResourceSearch();
-        $dataProvider = new ActiveDataProvider([
-            'query' => Resource::find(),
-        ]);
+        $searchModel = new NormSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -52,7 +43,7 @@ class ResourceController extends Controller
     }
 
     /**
-     * Displays a single Resource model.
+     * Displays a single Norm model.
      * @param integer $id
      * @return mixed
      */
@@ -64,25 +55,34 @@ class ResourceController extends Controller
     }
 
     /**
-     * Creates a new Resource model.
+     * Creates a new Norm model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Resource();
+        $model = new Norm();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
+        if ($model->load(Yii::$app->request->post())) {
+            $serviceModel = $this->module->serviceModel;
+            $model->element_model = $serviceModel::className();
+            if ($model->save()) {
+                return $this->redirect(['index']);
+            }
         } else {
+            $serviceModel = $this->module->serviceModel;
+            $services = $serviceModel::find()->all();
+            $resources = Resource::find()->all();
             return $this->render('create', [
                 'model' => $model,
+                'services' => $services,
+                'resources' => $resources,
             ]);
         }
     }
 
     /**
-     * Updates an existing Resource model.
+     * Updates an existing Norm model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -94,14 +94,19 @@ class ResourceController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
+            $serviceModel = $this->module->serviceModel;
+            $services = $serviceModel::find()->all();
+            $resources = Resource::find()->all();
             return $this->render('update', [
                 'model' => $model,
+                'services' => $services,
+                'resources' => $resources,
             ]);
         }
     }
 
     /**
-     * Deletes an existing Resource model.
+     * Deletes an existing Norm model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -114,15 +119,15 @@ class ResourceController extends Controller
     }
 
     /**
-     * Finds the Resource model based on its primary key value.
+     * Finds the Norm model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Resource the loaded model
+     * @return Norm the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Resource::findOne($id)) !== null) {
+        if (($model = Norm::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

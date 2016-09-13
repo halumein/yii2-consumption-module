@@ -30,7 +30,7 @@ class Resource extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'measures', 'comment'], 'required'],
+            [['title', 'measures', 'dimension'], 'required'],
             [['dimension', 'base_unit'], 'number'],
             [['title'], 'string', 'max' => 255],
             [['measures'], 'string', 'max' => 100],

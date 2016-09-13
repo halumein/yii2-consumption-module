@@ -22,14 +22,51 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            'id',
-            'title',
-            'dimension',
-            'measures',
-            'base_unit',
-            'comment',
+            [
+                'attribute' => 'id',
+                'filter' => false,
+                'contentOptions' => [
+                    'width' => 35
+                ]
+            ],
+            [
+                'attribute' => 'title',
+                'filter' => false,
+                'contentOptions' => [
+                    'width' => 155
+                ]
+            ],
+            [
+                'attribute' => 'dimension',
+                'filter' => false,
+                'contentOptions' => [
+                    'width' => 120
+                ]
+            ],
+            [
+                'attribute' => 'measures',
+                'filter' => false,
+                'contentOptions' => [
+                    'width' => 150
+                ]
+            ],
+            [
+                'attribute' => 'base_unit',
+                'filter' => false,
+                'contentOptions' => [
+                    'width' => 180
+                ]
+            ],
+            [
+                'attribute' => 'comment',
+                'filter' => false,
+            ],
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn', 'contentOptions' =>
+                [
+                'width' => 80
+                ]
+            ],
         ],
     ]); ?>
 
