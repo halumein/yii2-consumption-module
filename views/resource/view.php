@@ -31,6 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'dimension',
             'measures',
             'base_unit',
+            'base_cost',
             'comment',
         ],
     ]) ?>

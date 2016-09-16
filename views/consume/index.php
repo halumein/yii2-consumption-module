@@ -21,6 +21,8 @@ if($dateStart = yii::$app->request->get('date_start')) {
 if($dateStop = yii::$app->request->get('date_stop')) {
     $dateStop = date('Y-m-d', strtotime($dateStop));
 }
+
+
 ?>
 <div class="consume-index">
 
@@ -138,7 +140,7 @@ if($dateStop = yii::$app->request->get('date_stop')) {
                     'width' => 180],
             ],
 
-            ['class' => 'yii\grid\ActionColumn', 'template' => '{update}',  'buttonOptions' => ['class' => 'btn btn-default'], 'options' => ['style' => 'width: 125px;']],
+            ['class' => 'yii\grid\ActionColumn', 'template' => '{update}',  'buttonOptions' => ['class' => 'btn btn-default'], 'options' => ['style' => 'width: 55px;']],
         ],
     ]); ?>
 

@@ -58,6 +58,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 ]
             ],
             [
+                'attribute' => 'base_cost',
+                'filter' => false
+            ],
+            [
                 'attribute' => 'comment',
                 'filter' => false,
             ],

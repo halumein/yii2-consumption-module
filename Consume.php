@@ -34,4 +34,32 @@ class Consume implements ConsumeInterface
             $model->save();
         }
     }
+
+    public function getSumByPeriod($dateStart, $dateStop)
+    {
+        if($dateStart = yii::$app->request->get('date_start')) {
+            $dateStart = date('Y-m-d', strtotime($dateStart));
+        }
+
+        if($dateStop = yii::$app->request->get('date_stop')) {
+            $dateStop = date('Y-m-d', strtotime($dateStop));
+        }
+
+        $sql = 'SELECT * FROM consumption_consume WHERE ident=:ident';
+        $arrayConsumeByPeriod = ConsumeModel::findBySql($sql, [':ident' => 0])->all();
+        var_dump($arrayConsumeByPeriod);
+        die;
+
+        //->andWhere('date > :dateStart', 'date < :dateStop' [':dateStart' => $dateStart, ':dateStop' => $dateStop])->all();
+        $sumByPeriod = 1;
+        return $sumByPeriod;
+    }
+
+    public function getByIdent($ident)
+    {
+        $sql = 'SELECT * FROM consumption_consume WHERE ident=:ident';
+        $arrayConsumeByPeriod = ConsumeModel::findBySql($sql, [':ident' => $ident])->all();
+
+        return $arrayConsumeByPeriod;
+    }
 }

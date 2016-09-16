@@ -20,7 +20,7 @@ class ResourceSearch extends Resource
         return [
             [['id'], 'integer'],
             [['title', 'measures', 'comment'], 'safe'],
-            [['dimension', 'base_unit'], 'number'],
+            [['dimension', 'base_unit', 'base_cost'], 'number'],
         ];
     }
 
@@ -56,6 +56,7 @@ class ResourceSearch extends Resource
             'id' => $this->id,
             'dimension' => $this->dimension,
             'base_unit' => $this->base_unit,
+            'base_cost' => $this->base_cost,
         ]);
 
         $query->andFilterWhere(['like', 'title', $this->title])

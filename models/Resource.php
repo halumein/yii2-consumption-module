@@ -31,8 +31,8 @@ class Resource extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'measures', 'dimension'], 'required'],
-            [['dimension', 'base_unit'], 'number'],
+            [['title', 'measures', 'dimension', 'base_unit', 'base_cost'], 'required'],
+            [['dimension', 'base_unit', 'base_cost'], 'number'],
             [['title'], 'string', 'max' => 255],
             [['measures'], 'string', 'max' => 100],
             [['comment'], 'string', 'max' => 500],
@@ -50,6 +50,7 @@ class Resource extends \yii\db\ActiveRecord
             'dimension' => 'Размерность',
             'measures' => 'Ед. измерения',
             'base_unit' => 'Базовая размерность',
+            'base_cost' => 'Базовая стоимость',
             'comment' => 'Комментарий',
         ];
     }

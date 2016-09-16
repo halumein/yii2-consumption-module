@@ -22,6 +22,8 @@ use yii\bootstrap\ActiveForm;
 
     <?php echo $form->field($model, 'base_unit')->textInput(['maxlength' => true]) ?>
 
+    <?php echo $form->field($model, 'base_cost')->textInput(['maxlength' => true]) ?>
+
     <?php echo $form->field($model, 'comment')->textInput(['maxlength' => true]) ?>
 
     <div class="form-group">

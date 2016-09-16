@@ -175,4 +175,19 @@ class ConsumeController extends Controller
         }
         return $this->redirect(['index']);
     }
+
+    /**
+     * @return Action
+     */
+    public function actionTest()
+    {
+        $get = Yii::$app->request->get();
+        $ident = $get['ident'];
+        $arrayByIdent =  Yii::$app->consume->getByIdent($ident);
+
+        echo "<pre>";
+        var_dump($arrayByIdent);
+        die;
+        return $arrayByIdent;
+    }
 }
