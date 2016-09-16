@@ -16,8 +16,6 @@ use kartik\select2\Select2;
 
     <?php echo $form->errorSummary($model); ?>
 
-    <?php //echo $form->field($model, 'element_model')->textInput(['maxlength' => true]) ?>
-
     <?php
     echo $form->field($model, 'element_id')
         ->widget(Select2::classname(), [
@@ -30,8 +28,6 @@ use kartik\select2\Select2;
         ]);
     ?>
 
-    <?php // echo $form->field($model, 'element_id')->textInput() ?>
-
     <?php
     echo $form->field($model, 'resource_id')
         ->widget(Select2::classname(), [
@@ -43,8 +39,6 @@ use kartik\select2\Select2;
             ],
         ]);
     ?>
-
-    <?php //echo $form->field($model, 'resource_id')->textInput() ?>
 
     <?php echo $form->field($model, 'consumption')->textInput(['maxlength' => true]) ?>
 

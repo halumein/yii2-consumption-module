@@ -2,7 +2,7 @@
 
 namespace halumein\consumption\models;
 
-use halumein\consumption\models\Norm;
+use halumein\consumption\models\Resource;
 use Yii;
 
 /**
@@ -11,7 +11,7 @@ use Yii;
  * @property integer $id
  * @property string $date
  * @property string $order_model
- * @property integer $order_id
+ * @property integer $ident
  * @property string $element_model
  * @property integer $element_id
  * @property integer $norm_id
@@ -20,6 +20,8 @@ use Yii;
  */
 class Consume extends \yii\db\ActiveRecord
 {
+    public $resourceId;
+
     /**
      * @inheritdoc
      */
@@ -34,11 +36,14 @@ class Consume extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['date', 'order_model', 'order_id', 'element_model', 'element_id', 'norm_id'], 'required'],
+            [['date', 'element_id', 'resource_id', 'consume'], 'required'],
             [['date'], 'safe'],
-            [['order_id', 'element_id', 'norm_id'], 'integer'],
-            [['order_model', 'element_model'], 'string', 'max' => 255],
-            [['norm_id'], 'exist', 'skipOnError' => true, 'targetClass' => Norm::className(), 'targetAttribute' => ['norm_id' => 'id']],
+            [['ident', 'element_id', 'resource_id'], 'integer'],
+            [['consume'], 'number'],
+            [['element_model'], 'string', 'max' => 255],
+            [['comment'], 'string', 'max' => 500],
+            //[['recource_id'], 'exist', 'skipOnError' => true, 'targetClass' => Resource::className(), 'targetAttribute' => ['resource_id' => 'id']],
+            [['deleted'], 'safe'],
         ];
     }
 
@@ -50,25 +55,35 @@ class Consume extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'date' => 'Дата',
-            'order_model' => 'Модель заказа',
-            'order_id' => 'ID заказа',
-            'element_model' => 'Модель Service_Price',
-            'element_id' => 'ID Price',
-            'norm_id' => 'Норма',
+            'ident' => 'Идентификатор',
+            'element_id' => 'Услуга',
+            'resource_id' => 'Расход',
+            'comment' => 'Комментарий',
+            'deleted' => 'Удалена',
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getNorm()
-    {
-        return $this->hasOne(Norm::className(), ['id' => 'norm_id']);
-    }
+//    public function getResource()
+//    {
+//        return $this->hasOne(Resource::className(), ['id' => 'resource_id']);
+//    }
 
     public function getElement()
     {
         $serviceModel = Yii::$app->getModule('consumption')->serviceModel;
         return $this->hasOne($serviceModel::className(), ['id' => 'element_id']);
+    }
+
+    public static function getActiveConsumes()
+    {
+        return Consume::find()->where(['deleted' => null])->all();
+    }
+
+    public function getResource()
+    {
+        return $this->hasOne(Resource::className(), ['id' => 'resource_id']);
     }
 }

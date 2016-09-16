@@ -2,12 +2,15 @@
 
 namespace halumein\consumption\controllers;
 
+use halumein\consumption\models\Resource;
+use pistol88\service\models\Price;
 use Yii;
 use halumein\consumption\models\Consume;
 use halumein\consumption\models\search\ConsumeSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use halumein\consumption\models\Norm;
 use pistol88\order\models\Order;
 
 /**
@@ -34,7 +37,12 @@ class ConsumeController extends Controller
     public function actionIndex()
     {
         $searchModel = new ConsumeSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        $searchParams = Yii::$app->request->queryParams;
+        $searchParams['ConsumeSearch']['deleted'] = null;
+
+
+        $dataProvider = $searchModel->search($searchParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -64,18 +72,22 @@ class ConsumeController extends Controller
         $model = new Consume();
 
         if ($model->load(Yii::$app->request->post())) {
-            $model->order_model = Order::className();
 
-            $serviceModel = $this->module->serviceModel;
-            $model->element_model = $serviceModel::className();
+            //$serviceModel = $this->module->serviceModel;
+            //$model->element_model = $serviceModel::className();
 
             $model->date = date("Y-m-d H:i:s");
             if ($model->save()) {
                 return $this->redirect(['index']);
             }
         } else {
+            $serviceModel = $this->module->serviceModel;
+            $services = $serviceModel::find()->all();
+            $resources = Resource::find()->all();
             return $this->render('create', [
                 'model' => $model,
+                'services' => $services,
+                'resources' => $resources,
             ]);
         }
     }
@@ -91,10 +103,15 @@ class ConsumeController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         } else {
+            $serviceModel = $this->module->serviceModel;
+            $services = $serviceModel::find()->all();
+            $resources = Resource::find()->all();
             return $this->render('update', [
                 'model' => $model,
+                'services' => $services,
+                'resources' => $resources,
             ]);
         }
     }
@@ -107,9 +124,15 @@ class ConsumeController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        $model = $this->findModel($id);
+        $model->deleted = date('Y:m:d H:i:s', time());
+        if ($model->save()) {
+            return $this->redirect(['index']);
+        } else {
+            return $this->render('/error', [
+                'error' => $model->errors
+            ]);
+        }
     }
 
     /**
@@ -130,23 +153,26 @@ class ConsumeController extends Controller
 
     public function actionCreateget()
     {
-        $model = new Consume();
-
         $get = Yii::$app->request->get();
-
-        $model->element_id = $get['element_id'];
-        $model->norm_id = $get['norm_id'];
-        $model->order_id = $get['order_id'];
-
-        $model->order_model = Order::className();
-
         $serviceModel = $this->module->serviceModel;
-        $model->element_model = $serviceModel::className();
+        $order = Yii::$app->order->get($get['order_id']);
 
-        $model->date = date("Y-m-d H:i:s");
-        if ($model->save()) {
-            return $this->redirect(['index']);
+        $elements = $order->getElements();
+        foreach ($elements as $element){
+                $price = $element->getModel();
+                $norms = Yii::$app->norm->getNorms($price);
+
+                foreach ($norms as $norm){
+                    $model = new Consume();
+                    $model->ident           = $get['order_id'];
+                    $model->element_id      = $norm->element_id;
+                    $model->element_model   = $serviceModel::className();
+                    $model->resource_id     = $norm->resourceid;
+                    $model->consume         = $norm->consumption;
+                    $model->date            = date("Y-m-d H:i:s");
+                    $model->save();
+                }
         }
-
+        return $this->redirect(['index']);
     }
 }

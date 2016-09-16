@@ -21,7 +21,7 @@ use yii\bootstrap\ActiveForm;
 
     <?php echo $form->field($model, 'order_model') ?>
 
-    <?php echo $form->field($model, 'order_id') ?>
+    <?php echo $form->field($model, 'ident') ?>
 
     <?php echo $form->field($model, 'element_model') ?>
 

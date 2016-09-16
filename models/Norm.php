@@ -4,7 +4,7 @@ namespace halumein\consumption\models;
 
 use Yii;
 use halumein\consumption\models\Resource;
-use pistol88\service\models\Service;
+
 
 /**
  * This is the model class for table "consumption_norm".
@@ -70,6 +70,13 @@ class Norm extends \yii\db\ActiveRecord
         return $this->hasOne(Resource::className(), ['id' => 'resource_id']);
     }
 
+    public function getResourceId()
+    {
+        $resource = $this->hasOne(Resource::className(), ['id' => 'resource_id'])->one();
+        return $resource->id;
+    }
+
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -78,4 +85,11 @@ class Norm extends \yii\db\ActiveRecord
         $serviceModel = Yii::$app->getModule('consumption')->serviceModel;
         return $this->hasOne($serviceModel::className(), ['id' => 'element_id']);
     }
+
+    public function getName()
+    {
+        $name = $this->resource->title. " : " .$this->resource->dimension. " " .$this->resource->measures;
+        return $name;
+    }
+
 }

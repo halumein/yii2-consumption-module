@@ -66,9 +66,21 @@ class NormController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             $serviceModel = $this->module->serviceModel;
             $model->element_model = $serviceModel::className();
-            if ($model->save()) {
-                return $this->redirect(['index']);
+            //ищем есть ли модель с такими парамтерами, если есть то апдейт, если нет то новая
+            $searchForUpd = $this->findForUpd($model);
+            if ($searchForUpd !== null) {
+                $searchForUpd->load(Yii::$app->request->post());
+                if ($searchForUpd->save()) {
+                    $model->element_model = $serviceModel::className();
+                    return $this->redirect(['index']);
+                }
+            } else {
+                if ($model->save()) {
+                    return $this->redirect(['index']);
+                }
             }
+
+
         } else {
             $serviceModel = $this->module->serviceModel;
             $services = $serviceModel::find()->all();
@@ -131,6 +143,15 @@ class NormController extends Controller
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+
+    protected function findForUpd($model)
+    {
+        if (($model = Norm::find()->where(['element_model' => $model->element_model, 'element_id' => $model->element_id, 'resource_id' => $model->resource_id])->one()) !== null) {
+            return $model;
+        } else {
+            return null;
         }
     }
 }

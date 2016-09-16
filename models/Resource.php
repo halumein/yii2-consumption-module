@@ -3,6 +3,7 @@
 namespace halumein\consumption\models;
 
 use Yii;
+use halumein\consumption\models\Norm;
 
 /**
  * This is the model class for table "consumption_resource".
@@ -52,4 +53,16 @@ class Resource extends \yii\db\ActiveRecord
             'comment' => 'Комментарий',
         ];
     }
+
+    public function getName()
+    {
+        $name = $this->title. " : " .$this->dimension. " " .$this->measures;
+        return $name;
+    }
+
+    public function getNorms()
+    {
+        return $this->hasMany(Norm::className(), ['resource_id' => 'id']);
+    }
+
 }
