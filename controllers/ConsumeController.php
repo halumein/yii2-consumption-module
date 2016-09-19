@@ -179,7 +179,7 @@ class ConsumeController extends Controller
     /**
      * @return Action
      */
-    public function actionTest()
+    public function actionByIdent()
     {
         $get = Yii::$app->request->get();
         $ident = $get['ident'];
@@ -188,6 +188,32 @@ class ConsumeController extends Controller
         echo "<pre>";
         var_dump($arrayByIdent);
         die;
-        return $arrayByIdent;
+        //return $arrayByIdent;
+    }
+
+    public function actionByPeriod()
+    {
+        $get = Yii::$app->request->get();
+        $dateStart = $get['dateStart'];
+        $dateStop = $get['dateStop'];
+        $arrayConsumeByPeriod =  Yii::$app->consume->getByPeriod($dateStart, $dateStop);
+
+        echo "<pre>";
+        var_dump($arrayConsumeByPeriod);
+        die;
+        //return $arrayConsumeByPeriod;
+    }
+
+    public function actionSumByPeriod()
+    {
+        $get = Yii::$app->request->get();
+        $dateStart = $get['dateStart'];
+        $dateStop = $get['dateStop'];
+        $sumByPeriod =  Yii::$app->consume->getSumByPeriod($dateStart, $dateStop);
+
+        echo "<pre>";
+        var_dump($sumByPeriod);
+        die;
+        //return $this->render('index_test');
     }
 }

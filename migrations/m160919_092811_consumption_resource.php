@@ -3,7 +3,7 @@
 use yii\db\Schema;
 use yii\db\Migration;
 
-class m160913_063011_consumption_resource extends Migration
+class m160919_092811_consumption_resource extends Migration
 {
 
     public function init()
@@ -24,6 +24,7 @@ class m160913_063011_consumption_resource extends Migration
                 'dimension'=> $this->decimal(3, 10)->notNull()->defaultValue('0.000'),
                 'measures'=> $this->string(100)->notNull(),
                 'base_unit'=> $this->decimal(3, 10)->notNull()->defaultValue('0.000'),
+                'base_cost'=> $this->decimal(2, 10)->notNull(),
                 'comment'=> $this->string(500)->notNull(),
             ],$tableOptions
         );
