@@ -2,6 +2,7 @@
 
 namespace halumein\consumption\controllers;
 
+use halumein\consumption\models\Category;
 use halumein\consumption\models\Resource;
 use pistol88\service\models\Price;
 use Yii;
@@ -215,5 +216,51 @@ class ConsumeController extends Controller
         var_dump($sumByPeriod);
         die;
         //return $this->render('index_test');
+    }
+
+    public function actionByResource()
+    {
+        $get = Yii::$app->request->get();
+        $dateStart = $get['dateStart'];
+        $dateStop = $get['dateStop'];
+        $modelResource = Resource::findOne($get['id']);
+        $arrayConsumeByResource =  Yii::$app->consume->getByResource($modelResource, $dateStart, $dateStop);
+
+        echo "<pre>";
+        var_dump($arrayConsumeByResource);
+        die;
+        //return $this->render('index_test');
+    }
+
+    public function actionByCategory()
+    {
+        $get = Yii::$app->request->get();
+        $dateStart = $get['dateStart'];
+        $dateStop = $get['dateStop'];
+        $modelCategory = Category::findOne($get['id']);
+        $arrayConsumeByCategory =  Yii::$app->consume->getByCategory($modelCategory, $dateStart, $dateStop);
+
+        echo "<pre>";
+        var_dump($arrayConsumeByCategory);
+        die;
+        //return $this->render('index_test');
+
+//        $method = 'getByPeriod';
+//        if (is_callable([Yii::$app->consume, $method])) {
+//            var_dump(Yii::$app->consume->$method('16-09-2016'));
+//        } else {
+//            echo 'vse v govne';
+//        }
+//        die('test');
+    }
+
+    public function actionMethods()
+    {
+        $arrayMethods =  Yii::$app->consume->getMethods();
+
+        echo "<pre>";
+        var_dump($arrayMethods);
+        die;
+
     }
 }

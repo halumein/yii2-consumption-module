@@ -25,6 +25,10 @@ use yii\bootstrap\ActiveForm;
 
     <?php echo $form->field($model, 'base_unit') ?>
 
+    <?php echo $form->field($model, 'base_cost') ?>
+
+    <?php echo $form->field($model, 'category_id') ?>
+
     <?php // echo $form->field($model, 'comment') ?>
 
     <div class="form-group">

@@ -4,20 +4,20 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Resource */
+/* @var $model app\models\Category */
 
-$this->title = $model->title;
-$this->params['breadcrumbs'][] = ['label' => 'Ресурсы', 'url' => ['index']];
+$this->title = $model->name;
+$this->params['breadcrumbs'][] = ['label' => 'Категории', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="resource-view">
+<div class="category-view">
 
     <p>
         <?php echo Html::a('Изменить', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?php echo Html::a('Удалить', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => 'Вы уверены что хотите удалить ресурс?',
+                'confirm' => 'Вы уверены что хотите удалить эту категорию?',
                 'method' => 'post',
             ],
         ]) ?>
@@ -27,13 +27,8 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'title',
-            'dimension',
-            'measures',
-            'base_unit',
-            'base_cost',
-            'category_id',
-            'comment',
+            'name',
+            'parent',
         ],
     ]) ?>
 

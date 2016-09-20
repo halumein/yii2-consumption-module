@@ -5,12 +5,12 @@ namespace halumein\consumption\models\search;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use halumein\consumption\models\Resource;
+use halumein\consumption\models\Category;
 
 /**
- * ResourceSearch represents the model behind the search form about `app\models\Resource`.
+ * CategorySearch represents the model behind the search form about `app\models\Category`.
  */
-class ResourceSearch extends Resource
+class CategorySearch extends Category
 {
     /**
      * @inheritdoc
@@ -18,9 +18,8 @@ class ResourceSearch extends Resource
     public function rules()
     {
         return [
-            [['id', 'category_id'], 'integer'],
-            [['title', 'measures', 'comment'], 'safe'],
-            [['dimension', 'base_unit', 'base_cost'], 'number'],
+            [['id', 'parent'], 'integer'],
+            [['name'], 'safe'],
         ];
     }
 
@@ -42,7 +41,7 @@ class ResourceSearch extends Resource
      */
     public function search($params)
     {
-        $query = Resource::find();
+        $query = Category::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -54,15 +53,10 @@ class ResourceSearch extends Resource
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'dimension' => $this->dimension,
-            'base_unit' => $this->base_unit,
-            'base_cost' => $this->base_cost,
-            'category_id' => $this->category_id,
+            'parent' => $this->parent,
         ]);
 
-        $query->andFilterWhere(['like', 'title', $this->title])
-            ->andFilterWhere(['like', 'measures', $this->measures])
-            ->andFilterWhere(['like', 'comment', $this->comment]);
+        $query->andFilterWhere(['like', 'name', $this->name]);
 
         return $dataProvider;
     }

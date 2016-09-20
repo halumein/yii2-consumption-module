@@ -58,18 +58,11 @@ class Consume extends \yii\db\ActiveRecord
             'ident' => 'Идентификатор',
             'element_id' => 'Услуга',
             'resource_id' => 'Расход',
+            'consume' => 'Кол-во расхода',
             'comment' => 'Комментарий',
             'deleted' => 'Удалена',
         ];
     }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-//    public function getResource()
-//    {
-//        return $this->hasOne(Resource::className(), ['id' => 'resource_id']);
-//    }
 
     public function getElement()
     {
@@ -85,5 +78,10 @@ class Consume extends \yii\db\ActiveRecord
     public function getResource()
     {
         return $this->hasOne(Resource::className(), ['id' => 'resource_id']);
+    }
+
+    public function getCategory()
+    {
+        return $this->hasOne(Category::className(), ['id' => 'category_id'])->viaTable('consumption_resource', ['id' => 'resource_id']);
     }
 }

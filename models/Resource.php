@@ -33,6 +33,7 @@ class Resource extends \yii\db\ActiveRecord
         return [
             [['title', 'measures', 'dimension', 'base_unit', 'base_cost'], 'required'],
             [['dimension', 'base_unit', 'base_cost'], 'number'],
+            [['category_id'], 'integer'],
             [['title'], 'string', 'max' => 255],
             [['measures'], 'string', 'max' => 100],
             [['comment'], 'string', 'max' => 500],
@@ -51,6 +52,7 @@ class Resource extends \yii\db\ActiveRecord
             'measures' => 'Ед. измерения',
             'base_unit' => 'Базовая размерность',
             'base_cost' => 'Базовая стоимость',
+            'category_id' => 'Категория',
             'comment' => 'Комментарий',
         ];
     }
@@ -64,6 +66,11 @@ class Resource extends \yii\db\ActiveRecord
     public function getNorms()
     {
         return $this->hasMany(Norm::className(), ['resource_id' => 'id']);
+    }
+
+    public function getCategory()
+    {
+        return $this->hasOne(Category::className(), ['id' => 'category_id']);
     }
 
 }

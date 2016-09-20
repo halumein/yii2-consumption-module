@@ -2,6 +2,8 @@
 
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
+use yii\helpers\ArrayHelper;
+use kartik\select2\Select2;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Resource */
@@ -23,6 +25,18 @@ use yii\bootstrap\ActiveForm;
     <?php echo $form->field($model, 'base_unit')->textInput(['maxlength' => true]) ?>
 
     <?php echo $form->field($model, 'base_cost')->textInput(['maxlength' => true]) ?>
+
+    <?php
+        echo $form->field($model, 'category_id')
+        ->widget(Select2::classname(), [
+            'data' => ArrayHelper::map($categories, 'id', 'name'),
+            'language' => 'ru',
+            'options' => ['placeholder' => 'Выберите категорию ...'],
+            'pluginOptions' => [
+                'allowClear' => true
+            ],
+        ]);
+    ?>
 
     <?php echo $form->field($model, 'comment')->textInput(['maxlength' => true]) ?>
 

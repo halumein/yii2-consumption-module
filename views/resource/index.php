@@ -2,6 +2,8 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use halumein\consumption\models\Category;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\search\ResourceSearch */
@@ -60,6 +62,16 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'base_cost',
                 'filter' => false
+            ],
+            [
+                'attribute' => 'category_id',
+                'filter' => Html::activeDropDownList(
+                    $searchModel,
+                    'category_id',
+                    ArrayHelper::map(Category::find()->all(), 'id', 'name'),
+                    ['class' => 'form-control', 'prompt' => 'Все категории']
+                ),
+                'value' => 'category.name'
             ],
             [
                 'attribute' => 'comment',
