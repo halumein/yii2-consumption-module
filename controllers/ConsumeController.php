@@ -42,8 +42,10 @@ class ConsumeController extends Controller
         $searchParams = Yii::$app->request->queryParams;
         $searchParams['ConsumeSearch']['deleted'] = null;
 
-
         $dataProvider = $searchModel->search($searchParams);
+
+//        echo "<pre>";
+//        var_dump($dataProvider);
 
         return $this->render('index', [
             'searchModel' => $searchModel,

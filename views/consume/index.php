@@ -13,16 +13,13 @@ use nex\datepicker\DatePicker;
 
 $this->title = 'Расходы';
 $this->params['breadcrumbs'][] = $this->title;
-
 if($dateStart = yii::$app->request->get('date_start')) {
-    $dateStart = date('Y-m-d', strtotime($dateStart));
+    $dateStart = date('d.m.Y', strtotime($dateStart));
 }
 
 if($dateStop = yii::$app->request->get('date_stop')) {
-    $dateStop = date('Y-m-d', strtotime($dateStop));
+    $dateStop = date('d.m.Y', strtotime($dateStop));
 }
-
-
 ?>
 <div class="consume-index">
 
@@ -38,7 +35,7 @@ if($dateStop = yii::$app->request->get('date_stop')) {
         </div>
         <div class="panel-body">
             <form action="" class="row search">
-                <input type="hidden" name="ExchangeSearch[name]" value="" />
+                <input type="hidden" name="ConsumeSearch[name]" value="" />
                 <div class="col-md-4">
                     <div class="row">
                         <div class="col-md-6">
