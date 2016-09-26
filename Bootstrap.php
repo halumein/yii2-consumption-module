@@ -16,6 +16,10 @@ class Bootstrap implements BootstrapInterface
             $app->set('norm', ['class' => 'halumein\consumption\Norm']);
         }
 
+        if(!$app->has('income')) {
+            $app->set('income', ['class' => 'halumein\consumption\Income']);
+        }
+
         if (!isset($app->i18n->translations['consumption']) && !isset($app->i18n->translations['consumption*'])) {
             $app->i18n->translations['consumption'] = [
                 'class' => 'yii\i18n\PhpMessageSource',

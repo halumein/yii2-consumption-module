@@ -34,6 +34,7 @@ class Consume implements ConsumeInterface
             $model->consume         = $norm->consumption;
             $model->date            = date("Y-m-d H:i:s");
             $model->save();
+            //  Yii->app->consumption->addTransaction($sdfsdf, $sdfsdf, $ffgsdg);
         }
     }
 

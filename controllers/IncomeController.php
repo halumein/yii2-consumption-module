@@ -128,4 +128,17 @@ class IncomeController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
+    public function actionByResource()
+    {
+        $get = Yii::$app->request->get();
+        $resource_id = $get['resource_id'];
+        $arrayByResource =  Yii::$app->income->getBalance($resource_id);
+
+        echo "<pre>";
+        //var_dump($arrayByResource);
+        print_r($arrayByResource);
+        die;
+        //return $arrayByIdent;
+    }
 }
