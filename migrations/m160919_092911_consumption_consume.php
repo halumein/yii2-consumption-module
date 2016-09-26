@@ -25,7 +25,7 @@ class m160919_092911_consumption_consume extends Migration
                 'element_model'=> $this->string(255)->notNull(),
                 'element_id'=> $this->integer(11)->notNull(),
                 'resource_id'=> $this->integer(11)->notNull(),
-                'consume'=> $this->decimal(3, 10)->notNull(),
+                'consume'=> $this->decimal(10, 3)->notNull(),
                 'comment'=> $this->string(500)->notNull(),
                 'deleted'=> $this->datetime()->null()->defaultValue(null),
             ],$tableOptions
