@@ -59,7 +59,7 @@ class Resource extends \yii\db\ActiveRecord
 
     public function getName()
     {
-        $name = $this->title. " : " .$this->dimension. " " .$this->measures;
+        $name = $this->title. " (" . $this->measures . ")";
         return $name;
     }
 

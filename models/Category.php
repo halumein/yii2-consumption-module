@@ -45,8 +45,8 @@ class Category extends \yii\db\ActiveRecord
         ];
     }
 
-    public function getConsumes()
+    public function getTransactions()
     {
-        return $this->hasMany(Consume::className(), ['resource_id' => 'id'])->viaTable('consumption_resource', ['category_id' => 'id']);
+        return $this->hasMany(Transaction::className(), ['resource_id' => 'id'])->viaTable('consumption_resource', ['category_id' => 'id']);
     }
 }

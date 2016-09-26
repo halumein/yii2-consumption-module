@@ -8,10 +8,10 @@ use yii\helpers\ArrayHelper;
 use nex\datepicker\DatePicker;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\ConsumeSearch */
+/* @var $searchModel app\models\TransactionSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Расходы';
+$this->title = 'Транзакции';
 $this->params['breadcrumbs'][] = $this->title;
 if($dateStart = yii::$app->request->get('date_start')) {
     $dateStart = date('d.m.Y', strtotime($dateStart));
@@ -21,12 +21,12 @@ if($dateStop = yii::$app->request->get('date_stop')) {
     $dateStop = date('d.m.Y', strtotime($dateStop));
 }
 ?>
-<div class="consume-index">
+<div class="transaction-index">
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?php echo Html::a('Добавить расход', ['create'], ['class' => 'btn btn-success']) ?>
+        <?php //echo Html::a('Добавить транзакцию', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <div class="panel panel-primary">
@@ -35,7 +35,7 @@ if($dateStop = yii::$app->request->get('date_stop')) {
         </div>
         <div class="panel-body">
             <form action="" class="row search">
-                <input type="hidden" name="ConsumeSearch[name]" value="" />
+                <input type="hidden" name="TransactionSearch[name]" value="" />
                 <div class="col-md-4">
                     <div class="row">
                         <div class="col-md-6">
@@ -95,7 +95,12 @@ if($dateStop = yii::$app->request->get('date_stop')) {
             [
                 'attribute' =>'ident',
                 'contentOptions' => [
-                    'width' => 150]
+                    'width' => 40]
+            ],
+            [
+                'attribute' =>'type',
+                'contentOptions' => [
+                    'width' => 80]
             ],
             [
                 'attribute' => 'element_id',
@@ -119,10 +124,16 @@ if($dateStop = yii::$app->request->get('date_stop')) {
                     ['class' => 'form-control', 'prompt' => 'нет отбора']
                 ),
                 'value' => function($model) {
-                        return  $model->resource->title . ' : ' . $model->consume;
+                        return  $model->resource->title . ' : ' . $model->count;
                 },
 //                'contentOptions' => [
 //                    'width' => 450],
+            ],
+            [
+                'attribute' => 'amount',
+                'filter' => false,
+                'contentOptions' => [
+                    'width' => 130],
             ],
             [
                 'attribute' => 'date',
@@ -130,14 +141,14 @@ if($dateStop = yii::$app->request->get('date_stop')) {
                     'width' => 180],
                 'filter' => false,
             ],
-            [
-                'attribute' => 'comment',
-                'filter' => false,
-                'contentOptions' => [
-                    'width' => 180],
-            ],
+//            [
+//                'attribute' => 'comment',
+//                'filter' => false,
+//                'contentOptions' => [
+//                    'width' => 180],
+//            ],
 
-            ['class' => 'yii\grid\ActionColumn', 'template' => '{update}',  'buttonOptions' => ['class' => 'btn btn-default'], 'options' => ['style' => 'width: 55px;']],
+            //['class' => 'yii\grid\ActionColumn', 'template' => '{update}',  'buttonOptions' => ['class' => 'btn btn-default'], 'options' => ['style' => 'width: 55px;']],
         ],
     ]); ?>
 

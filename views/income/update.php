@@ -3,18 +3,17 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Consume */
+/* @var $model halumein\cashbox\models\Income */
 
-$this->title = 'Изменить расход: ' . ' ' . $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Расходы', 'url' => ['index']];
+$this->title = 'Изменить приход: ' . ' ' . $model->id;
+$this->params['breadcrumbs'][] = ['label' => 'Приходы', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Изменить';
 ?>
-<div class="consume-update">
+<div class="income-update">
 
     <?php echo $this->render('_form', [
         'model' => $model,
-        'services' => $services,
         'resources' => $resources,
     ]) ?>
 

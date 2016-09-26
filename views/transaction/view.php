@@ -4,10 +4,10 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Consume */
+/* @var $model app\models\Transaction */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Расходы', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Транзакции', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="consume-view">
@@ -32,7 +32,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'element_model',
             'element_id',
             'resource_id',
-            'consume',
+            'count',
+            'amount',
             'comment',
         ],
     ]) ?>

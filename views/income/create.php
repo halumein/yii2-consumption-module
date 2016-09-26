@@ -4,17 +4,16 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Consume */
+/* @var $model halumein\cashbox\models\Income */
 
-$this->title = 'Добавить расход';
-$this->params['breadcrumbs'][] = ['label' => 'Расход', 'url' => ['index']];
+$this->title = 'Добавить приход';
+$this->params['breadcrumbs'][] = ['label' => 'Приходы', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="consume-create">
+<div class="income-create">
 
     <?php echo $this->render('_form', [
         'model' => $model,
-        'services' => $services,
         'resources' => $resources,
     ]) ?>
 
