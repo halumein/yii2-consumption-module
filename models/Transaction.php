@@ -18,7 +18,7 @@ use Yii;
  *
  * @property ConsumptionNorm $norm
  */
-class Consume extends \yii\db\ActiveRecord
+class Transaction extends \yii\db\ActiveRecord
 {
     public $resourceId;
 
@@ -27,7 +27,7 @@ class Consume extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'consumption_consume';
+        return 'consumption_transaction';
     }
 
     /**
@@ -36,11 +36,11 @@ class Consume extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['date', 'element_id', 'resource_id', 'consume'], 'required'],
+            [['date', 'element_id', 'resource_id', 'count'], 'required'],
             [['date'], 'safe'],
             [['ident', 'element_id', 'resource_id'], 'integer'],
-            [['consume'], 'number'],
-            [['element_model'], 'string', 'max' => 255],
+            [['count'], 'number'],
+            [['element_model', 'type'], 'string', 'max' => 255],
             [['comment'], 'string', 'max' => 500],
             //[['recource_id'], 'exist', 'skipOnError' => true, 'targetClass' => Resource::className(), 'targetAttribute' => ['resource_id' => 'id']],
             [['deleted'], 'safe'],
@@ -53,12 +53,13 @@ class Consume extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
+            'type' => 'Приход/Расход',
             'date' => 'Дата',
-            'ident' => 'Идентификатор',
+            'ident' => 'ID',
             'element_id' => 'Услуга',
-            'resource_id' => 'Расход',
-            'consume' => 'Кол-во расхода',
+            'resource_id' => 'Кол-во ресурса',
+            'count' => 'Кол-во расхода',
+            'amount' => 'Остаток',
             'comment' => 'Комментарий',
             'deleted' => 'Удалена',
         ];
@@ -70,9 +71,9 @@ class Consume extends \yii\db\ActiveRecord
         return $this->hasOne($serviceModel::className(), ['id' => 'element_id']);
     }
 
-    public static function getActiveConsumes()
+    public static function getActiveTransactions()
     {
-        return Consume::find()->where(['deleted' => null])->all();
+        return Transaction::find()->where(['deleted' => null])->all();
     }
 
     public function getResource()

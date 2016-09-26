@@ -6,11 +6,11 @@ use yii\helpers\ArrayHelper;
 use kartik\select2\Select2;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Consume */
+/* @var $model app\models\Transaction */
 /* @var $form yii\bootstrap\ActiveForm */
 ?>
 
-<div class="consume-form">
+<div class="transaction-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
@@ -38,7 +38,9 @@ use kartik\select2\Select2;
         ]);
     ?>
 
-    <?php echo $form->field($model, 'consume')->textInput(['placeholder' => '0.000']) ?>
+    <?php echo $form->field($model, 'count')->textInput(['placeholder' => '0.000']) ?>
+
+    <?php echo $form->field($model, 'amount')->textInput(['placeholder' => '0.00']) ?>
 
     <?php echo $form->field($model, 'comment')->textInput(['maxlength' => true]) ?>
 

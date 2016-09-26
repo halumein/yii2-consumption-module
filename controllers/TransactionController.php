@@ -6,8 +6,8 @@ use halumein\consumption\models\Category;
 use halumein\consumption\models\Resource;
 use pistol88\service\models\Price;
 use Yii;
-use halumein\consumption\models\Consume;
-use halumein\consumption\models\search\ConsumeSearch;
+use halumein\consumption\models\Transaction;
+use halumein\consumption\models\search\TransactionSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -15,9 +15,9 @@ use halumein\consumption\models\Norm;
 use pistol88\order\models\Order;
 
 /**
- * ConsumeController implements the CRUD actions for Consume model.
+ * TransactionController implements the CRUD actions for Transaction model.
  */
-class ConsumeController extends Controller
+class TransactionController extends Controller
 {
     public function behaviors()
     {
@@ -32,15 +32,15 @@ class ConsumeController extends Controller
     }
 
     /**
-     * Lists all Consume models.
+     * Lists all Transaction models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new ConsumeSearch();
+        $searchModel = new TransactionSearch();
 
         $searchParams = Yii::$app->request->queryParams;
-        $searchParams['ConsumeSearch']['deleted'] = null;
+        $searchParams['TransactionSearch']['deleted'] = null;
 
         $dataProvider = $searchModel->search($searchParams);
 
@@ -54,7 +54,7 @@ class ConsumeController extends Controller
     }
 
     /**
-     * Displays a single Consume model.
+     * Displays a single Transaction model.
      * @param integer $id
      * @return mixed
      */
@@ -66,61 +66,61 @@ class ConsumeController extends Controller
     }
 
     /**
-     * Creates a new Consume model.
+     * Creates a new Transaction model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
-    {
-        $model = new Consume();
-
-        if ($model->load(Yii::$app->request->post())) {
-
-            //$serviceModel = $this->module->serviceModel;
-            //$model->element_model = $serviceModel::className();
-
-            $model->date = date("Y-m-d H:i:s");
-            if ($model->save()) {
-                return $this->redirect(['index']);
-            }
-        } else {
-            $serviceModel = $this->module->serviceModel;
-            $services = $serviceModel::find()->all();
-            $resources = Resource::find()->all();
-            return $this->render('create', [
-                'model' => $model,
-                'services' => $services,
-                'resources' => $resources,
-            ]);
-        }
-    }
+//    public function actionCreate()
+//    {
+//        $model = new Transaction();
+//
+//        if ($model->load(Yii::$app->request->post())) {
+//
+//            //$serviceModel = $this->module->serviceModel;
+//            //$model->element_model = $serviceModel::className();
+//
+//            $model->date = date("Y-m-d H:i:s");
+//            if ($model->save()) {
+//                return $this->redirect(['index']);
+//            }
+//        } else {
+//            $serviceModel = $this->module->serviceModel;
+//            $services = $serviceModel::find()->all();
+//            $resources = Resource::find()->all();
+//            return $this->render('create', [
+//                'model' => $model,
+//                'services' => $services,
+//                'resources' => $resources,
+//            ]);
+//        }
+//    }
 
     /**
-     * Updates an existing Consume model.
+     * Updates an existing Transaction model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
      */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
-        } else {
-            $serviceModel = $this->module->serviceModel;
-            $services = $serviceModel::find()->all();
-            $resources = Resource::find()->all();
-            return $this->render('update', [
-                'model' => $model,
-                'services' => $services,
-                'resources' => $resources,
-            ]);
-        }
-    }
+//    public function actionUpdate($id)
+//    {
+//        $model = $this->findModel($id);
+//
+//        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+//            return $this->redirect(['index']);
+//        } else {
+//            $serviceModel = $this->module->serviceModel;
+//            $services = $serviceModel::find()->all();
+//            $resources = Resource::find()->all();
+//            return $this->render('update', [
+//                'model' => $model,
+//                'services' => $services,
+//                'resources' => $resources,
+//            ]);
+//        }
+//    }
 
     /**
-     * Deletes an existing Consume model.
+     * Deletes an existing Transaction model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -139,44 +139,19 @@ class ConsumeController extends Controller
     }
 
     /**
-     * Finds the Consume model based on its primary key value.
+     * Finds the Transaction model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Consume the loaded model
+     * @return Transaction the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Consume::findOne($id)) !== null) {
+        if (($model = Transaction::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
-    }
-
-    public function actionCreateget()
-    {
-        $get = Yii::$app->request->get();
-        $serviceModel = $this->module->serviceModel;
-        $order = Yii::$app->order->get($get['order_id']);
-
-        $elements = $order->getElements();
-        foreach ($elements as $element){
-                $price = $element->getModel();
-                $norms = Yii::$app->norm->getNorms($price);
-
-                foreach ($norms as $norm){
-                    $model = new Consume();
-                    $model->ident           = $get['order_id'];
-                    $model->element_id      = $norm->element_id;
-                    $model->element_model   = $serviceModel::className();
-                    $model->resource_id     = $norm->resourceid;
-                    $model->consume         = $norm->consumption;
-                    $model->date            = date("Y-m-d H:i:s");
-                    $model->save();
-                }
-        }
-        return $this->redirect(['index']);
     }
 
     /**
@@ -199,12 +174,12 @@ class ConsumeController extends Controller
         $get = Yii::$app->request->get();
         $dateStart = $get['dateStart'];
         $dateStop = $get['dateStop'];
-        $arrayConsumeByPeriod =  Yii::$app->consume->getByPeriod($dateStart, $dateStop);
+        $arrayTransactionByPeriod =  Yii::$app->consume->getByPeriod($dateStart, $dateStop);
 
         echo "<pre>";
-        var_dump($arrayConsumeByPeriod);
+        var_dump($arrayTransactionByPeriod);
         die;
-        //return $arrayConsumeByPeriod;
+        //return $arrayTransactionByPeriod;
     }
 
     public function actionSumByPeriod()
@@ -226,10 +201,10 @@ class ConsumeController extends Controller
         $dateStart = $get['dateStart'];
         $dateStop = $get['dateStop'];
         $modelResource = Resource::findOne($get['id']);
-        $arrayConsumeByResource =  Yii::$app->consume->getByResource($modelResource, $dateStart, $dateStop);
+        $arrayTransactionByResource =  Yii::$app->consume->getByResource($modelResource, $dateStart, $dateStop);
 
         echo "<pre>";
-        var_dump($arrayConsumeByResource);
+        var_dump($arrayTransactionByResource);
         die;
         //return $this->render('index_test');
     }
@@ -240,20 +215,12 @@ class ConsumeController extends Controller
         $dateStart = $get['dateStart'];
         $dateStop = $get['dateStop'];
         $modelCategory = Category::findOne($get['id']);
-        $arrayConsumeByCategory =  Yii::$app->consume->getByCategory($modelCategory, $dateStart, $dateStop);
+        $arrayTransactionByCategory =  Yii::$app->consume->getByCategory($modelCategory, $dateStart, $dateStop);
 
         echo "<pre>";
-        var_dump($arrayConsumeByCategory);
+        var_dump($arrayTransactionByCategory);
         die;
-        //return $this->render('index_test');
 
-//        $method = 'getByPeriod';
-//        if (is_callable([Yii::$app->consume, $method])) {
-//            var_dump(Yii::$app->consume->$method('16-09-2016'));
-//        } else {
-//            echo 'vse v govne';
-//        }
-//        die('test');
     }
 
     public function actionMethods()

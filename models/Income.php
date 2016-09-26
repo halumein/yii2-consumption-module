@@ -30,10 +30,10 @@ class Income extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['date', 'resource_id', 'income', 'cost', 'balance'], 'required'],
+            [['date', 'resource_id', 'income', 'cost', 'user_id'], 'required'],
             [['date'], 'safe'],
-            [['resource_id'], 'integer'],
-            [['income', 'cost', 'balance'], 'number'],
+            [['resource_id', 'user_id'], 'integer'],
+            [['income', 'cost'], 'number'],
         ];
     }
 
@@ -48,12 +48,18 @@ class Income extends \yii\db\ActiveRecord
             'resource_id' => 'Ресурс',
             'income' => 'Кол-во прихода',
             'cost' => 'Сумма',
-            'balance' => 'Баланс',
+            'user_id' => 'Пользователь',
         ];
     }
 
     public function getResource()
     {
         return $this->hasOne(Resource::className(), ['id' => 'resource_id']);
+    }
+
+    public function getUser()
+    {
+        $userForConsumption = Yii::$app->getModule('consumption')->userForConsumption;
+        return $this->hasOne($userForConsumption::className(), ['id' => 'user_id']);
     }
 }

@@ -123,15 +123,18 @@ if($dateStop = yii::$app->request->get('date_stop')) {
                 'filter' => false,
             ],
             [
-                'attribute' => 'balance',
-                'value' => function($model) {
-                    return  $model->balance . " " . $model->resource->measures;
-                },
+                'attribute' => 'date',
                 'filter' => false,
             ],
             [
-                'attribute' => 'date',
-                'filter' => false,
+                'attribute' => 'user_id',
+                'filter' => Html::activeDropDownList(
+                    $searchModel,
+                    'user_id',
+                    ArrayHelper::map($activeUsers, 'id', 'name'),
+                    ['class' => 'form-control', 'prompt' => 'Все сотрудники']
+                ),
+                'value' => 'user.fullName'
             ],
 
             ['class' => 'yii\grid\ActionColumn', 'template' => '{update}',  'buttonOptions' => ['class' => 'btn btn-default'], 'options' => ['style' => 'width: 55px;']],

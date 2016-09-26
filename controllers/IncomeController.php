@@ -36,10 +36,15 @@ class IncomeController extends Controller
         $searchModel = new IncomeSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $resources = Resource::find()->all();
+
+        $userForConsumptionModel = $this->module->userForConsumption;
+        $activeUsers = $userForConsumptionModel::find()->all();
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'resources' => $resources,
+            'activeUsers' => $activeUsers,
         ]);
     }
 
@@ -65,9 +70,13 @@ class IncomeController extends Controller
         $model = new Income();
 
         if ($model->load(Yii::$app->request->post())){
-            $model->balance = Yii::$app->request->post()["Income"]["income"];
+            $model->user_id = Yii::$app->user->id;
             $model->date = date("Y-m-d H:i:s");
             if ($model->save()) {
+                //записываем на основаниии прихода транзакцию
+                $resource_id = $model->resource_id;
+                $count = $model->income;
+                Yii::$app->transaction->addForIncome($resource_id, $count);
                 return $this->redirect(['index']);
             }
         } else {

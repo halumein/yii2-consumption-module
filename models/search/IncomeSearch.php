@@ -18,9 +18,9 @@ class IncomeSearch extends Income
     public function rules()
     {
         return [
-            [['id', 'resource_id'], 'integer'],
+            [['id', 'resource_id', 'user_id'], 'integer'],
             [['date'], 'safe'],
-            [['income', 'cost', 'balance'], 'number'],
+            [['income', 'cost', 'user_id'], 'number'],
         ];
     }
 
@@ -58,7 +58,7 @@ class IncomeSearch extends Income
             'resource_id' => $this->resource_id,
             'income' => $this->income,
             'cost' => $this->cost,
-            'balance' => $this->balance,
+            'user_id' => $this->user_id,
         ]);
 
         if($dateStart = yii::$app->request->get('date_start')) {

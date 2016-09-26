@@ -6,6 +6,7 @@ use halumein\consumption\interfaces\Income as IncomeInterface;
 
 class Income implements IncomeInterface
 {
+    //не работает потому что удалили поле баланс
     public function getBalance($resource_id)
     {
         $incomes = IncomeModel::find()->where(['resource_id' => $resource_id])->all();

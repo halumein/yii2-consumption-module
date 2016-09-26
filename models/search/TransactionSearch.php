@@ -5,13 +5,13 @@ namespace halumein\consumption\models\search;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use halumein\consumption\models\Consume;
+use halumein\consumption\models\Transaction;
 
 
 /**
- * ConsumeSearch represents the model behind the search form about `app\models\Consume`.
+ * TransactionSearch represents the model behind the search form about `app\models\Transaction`.
  */
-class ConsumeSearch extends Consume
+class TransactionSearch extends Transaction
 {
     /**
      * @inheritdoc
@@ -20,7 +20,7 @@ class ConsumeSearch extends Consume
     {
         return [
             [['id', 'ident', 'element_id', 'resource_id'], 'integer'],
-            [['consume'], 'number'],
+            [['count'], 'number'],
             [['date', 'element_model'], 'safe'],
         ];
     }
@@ -43,7 +43,7 @@ class ConsumeSearch extends Consume
      */
     public function search($params)
     {
-        $query = Consume::find();
+        $query = Transaction::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
