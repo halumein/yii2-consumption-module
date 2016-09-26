@@ -23,4 +23,33 @@ php yii migrate --migrationPath=vendor/halumein/yii2-consumption-module/migratio
     ]
 ```
 
+В модуль Order добавить обработку, которая отработает при создании нового заказа
+
+,,,
+
+'modules' => [
+
+    'order' => [
+    
+        ...
+    
+        'on create' => function($event) {
+            $order = $event->model;
+        
+            $ident  = $order->id;
+            $elements = $order->getElements();
+        
+            foreach ($elements as $element) {
+                $countPrice = $element->count;
+                $price = $element->getModel();
+                Yii::$app->transaction->addForPrice($price, $countPrice, $ident);
+            }
+        }
+    
+        ...
+   
+    ]
+]
+,,,            
+
 дальше обращаться по адресу consumption/<имя_контроллера>
