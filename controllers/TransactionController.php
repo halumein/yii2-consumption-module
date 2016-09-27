@@ -161,7 +161,7 @@ class TransactionController extends Controller
     {
         $get = Yii::$app->request->get();
         $ident = $get['ident'];
-        $arrayByIdent =  Yii::$app->consume->getByIdent($ident);
+        $arrayByIdent =  Yii::$app->consumption->getByIdent($ident);
 
         echo "<pre>";
         var_dump($arrayByIdent);
@@ -174,7 +174,7 @@ class TransactionController extends Controller
         $get = Yii::$app->request->get();
         $dateStart = $get['dateStart'];
         $dateStop = $get['dateStop'];
-        $arrayTransactionByPeriod =  Yii::$app->consume->getByPeriod($dateStart, $dateStop);
+        $arrayTransactionByPeriod =  Yii::$app->consumption->getByPeriod($dateStart, $dateStop);
 
         echo "<pre>";
         var_dump($arrayTransactionByPeriod);
@@ -187,7 +187,7 @@ class TransactionController extends Controller
         $get = Yii::$app->request->get();
         $dateStart = $get['dateStart'];
         $dateStop = $get['dateStop'];
-        $sumByPeriod =  Yii::$app->consume->getSumByPeriod($dateStart, $dateStop);
+        $sumByPeriod =  Yii::$app->consumption->getSumByPeriod($dateStart, $dateStop);
 
         echo "<pre>";
         var_dump($sumByPeriod);
@@ -201,7 +201,7 @@ class TransactionController extends Controller
         $dateStart = $get['dateStart'];
         $dateStop = $get['dateStop'];
         $modelResource = Resource::findOne($get['id']);
-        $arrayTransactionByResource =  Yii::$app->consume->getByResource($modelResource, $dateStart, $dateStop);
+        $arrayTransactionByResource =  Yii::$app->consumption->getByResource($modelResource, $dateStart, $dateStop);
 
         echo "<pre>";
         var_dump($arrayTransactionByResource);
@@ -215,7 +215,7 @@ class TransactionController extends Controller
         $dateStart = $get['dateStart'];
         $dateStop = $get['dateStop'];
         $modelCategory = Category::findOne($get['id']);
-        $arrayTransactionByCategory =  Yii::$app->consume->getByCategory($modelCategory, $dateStart, $dateStop);
+        $arrayTransactionByCategory =  Yii::$app->consumption->getByCategory($modelCategory, $dateStart, $dateStop);
 
         echo "<pre>";
         var_dump($arrayTransactionByCategory);
@@ -225,10 +225,25 @@ class TransactionController extends Controller
 
     public function actionMethods()
     {
-        $arrayMethods =  Yii::$app->consume->getMethods();
+        $arrayMethods =  Yii::$app->consumption->getMethods();
 
         echo "<pre>";
         var_dump($arrayMethods);
+        die;
+
+    }
+
+    public function actionRemains()
+    {
+        $get = Yii::$app->request->get();
+        $id = $get['id'];
+
+
+        $model = $this->findModel($id);
+        $array =  Yii::$app->consumption->setRemainOutcome($model);
+
+        echo "<pre>";
+        var_dump($array);
         die;
 
     }

@@ -76,7 +76,8 @@ class IncomeController extends Controller
                 //записываем на основаниии прихода транзакцию
                 $resource_id = $model->resource_id;
                 $count = $model->income;
-                Yii::$app->transaction->addTransaction('income', $resource_id, $count);
+                Yii::$app->consumption->addTransaction('income', $resource_id, $count);
+                Yii::$app->consumption->addRemain($model);
                 return $this->redirect(['index']);
             }
         } else {

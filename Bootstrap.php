@@ -8,17 +8,13 @@ class Bootstrap implements BootstrapInterface
 {
     public function bootstrap($app)
     {
-        if(!$app->has('transaction')) {
-            $app->set('transaction', ['class' => 'halumein\consumption\Transaction']);
+        if(!$app->has('consumption')) {
+            $app->set('consumption', ['class' => 'halumein\consumption\Consumption']);
         }
 
-        if(!$app->has('norm')) {
-            $app->set('norm', ['class' => 'halumein\consumption\Norm']);
-        }
-
-        if(!$app->has('income')) {
-            $app->set('income', ['class' => 'halumein\consumption\Income']);
-        }
+//        if(!$app->has('income')) {
+//            $app->set('income', ['class' => 'halumein\consumption\Income']);
+//        }
 
         if (!isset($app->i18n->translations['consumption']) && !isset($app->i18n->translations['consumption*'])) {
             $app->i18n->translations['consumption'] = [
