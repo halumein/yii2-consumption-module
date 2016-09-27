@@ -20,43 +20,49 @@ class Transaction implements TransactionInterface
         return TransactionModel::findOne($id);
     }
 
-    public function addForIncome($resource_id, $count)
+    public function addTransaction($type, $resource_id, $count, $params = null)
     {
         //создаем запись в таблице consumption_transaction
-
         $model = new TransactionModel();
-        $model->type            = 'income';
-        $model->ident           = 0;
-        $model->element_id      = 0;
-        $model->element_model   = "";
-        $model->resource_id     = $resource_id;
-        $model->count           = $count;
+        $model->type        = $type;
+        $model->resource_id = $resource_id;
+        $model->count       = $count;
+        $model->date        = date("Y-m-d H:i:s");
+
+        $model->ident = 0;
+        if (isset($params['ident'])) {
+            $model->ident = $params['ident'];
+        }
+
+        $model->element_id = 0;
+        if (isset($params['element_id'])) {
+            $model->element_id = $params['element_id'];
+        }
+
+        $model->element_model = "";
+        if (isset($params['element_model'])) {
+            $model->element_model = $params['element_model'];
+        }
+
         $lastAmount = $model::find()->where(['resource_id' => $resource_id])->orderBy(['date' => SORT_DESC])->one();
-        $amount = $lastAmount->amount + $count;
-        $model->amount          = $amount;
-        $model->date            = date("Y-m-d H:i:s");
+        if ($type == 'income') {
+            $amount = $lastAmount->amount + $count;
+        } elseif ($type == 'outcome'){
+            $amount = $lastAmount->amount - $count;
+        }
+        $model->amount = $amount;
         $model->save();
     }
 
-    public function addForPrice($price, $countPrice, $ident)
+    public function addByPrice($price, $countPrice, $ident)
     {
-        //создаем запись в таблице consumption_transaction
-
         $norms = Yii::$app->norm->getNorms($price);
         $serviceModel = Yii::$app->getModule('consumption')->serviceModel;
         foreach ($norms as $norm){
-            $model = new TransactionModel();
-            $model->type            = 'outcome';
-            $model->ident           = $ident;
-            $model->element_id      = $norm->element_id;
-            $model->element_model   = $serviceModel::className();
-            $model->resource_id     = $norm->resourceid;
-            $model->count           = $norm->consumption * $countPrice;
-            $lastAmount = $model::find()->where(['resource_id' => $norm->resourceid])->orderBy(['date' => SORT_DESC])->one();
-            $amount = $lastAmount->amount - $norm->consumption * $countPrice;
-            $model->amount          = $amount;
-            $model->date            = date("Y-m-d H:i:s");
-            $model->save();
+            $params = array('ident' => $ident, 'element_id' => $norm->element_id, 'element_model' => $serviceModel::className());
+            $resource_id = $norm->resourceid;
+            $count = $norm->consumption * $countPrice;
+            $this->addTransaction('outcome', $resource_id, $count, $params);
         }
     }
 
