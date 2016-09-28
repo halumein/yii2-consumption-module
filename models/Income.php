@@ -47,6 +47,7 @@ class Income extends \yii\db\ActiveRecord
             'date' => 'Дата',
             'resource_id' => 'Ресурс',
             'income' => 'Кол-во прихода',
+            'amount' => 'Кол-во остаток',
             'cost' => 'Сумма',
             'user_id' => 'Пользователь',
         ];
@@ -61,5 +62,10 @@ class Income extends \yii\db\ActiveRecord
     {
         $userForConsumption = Yii::$app->getModule('consumption')->userForConsumption;
         return $this->hasOne($userForConsumption::className(), ['id' => 'user_id']);
+    }
+
+    public function getRemain()
+    {
+        return $this->hasOne(Remain::className(), ['income_id' => 'id']);
     }
 }

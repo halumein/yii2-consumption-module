@@ -1,6 +1,7 @@
 <?php
 namespace halumein\consumption;
 
+use halumein\consumption\models\Cost;
 use halumein\consumption\models\Income;
 use halumein\consumption\models\Transaction as TransactionModel;
 use halumein\consumption\interfaces\Transaction as TransactionInterface;
@@ -212,16 +213,52 @@ class Consumption implements TransactionInterface, NormInterface, RemainInterfac
         $model = new Remain();
         $model->income_id = $income->id;
         $model->amount    = $income->income;
-        $model->save();
+        if ($model->save()) {
+            return true;
+        } else {
+            return $model->errors;
+        }
     }
 
     public function setRemainOutcome($transactionModel){
         $arrayIncomeId = Income::find()->select(['id'])->where(['resource_id' => $transactionModel->resource_id])->asArray()->column();
         $arrayRemains = Remain::find()->where(['income_id' => $arrayIncomeId])->andWhere(['>', 'amount', 0])->all();
-        echo "<pre>";
-        var_dump($arrayRemains);
-        die;
-        return $arrayRemains;
+        $countTransaction = $transactionModel->count;
+        foreach ($arrayRemains as $remain){
+            if ($remain->amount >= $countTransaction){
+                $remain->amount = $remain->amount - $countTransaction;
+                $remain->save();
+                $this->addCost($transactionModel->id, $remain->income_id, $countTransaction, $transactionModel->date);
+                $countTransaction = 0;
+            } else {
+                $countTransaction = $countTransaction - $remain->amount;
+                $consume_amount = $remain->amount;
+                $remain->amount = 0;
+                $remain->save();
+                $this->addCost($transactionModel->id, $remain->income_id, $consume_amount, $transactionModel->date);
+            }
+            if ($countTransaction == 0){
+                break;
+            }
+        }
+        if ($countTransaction > 0){
+            $this->addCost($transactionModel->id, null, $countTransaction, $transactionModel->date);
+        }
+        return true;
+    }
+
+    public function addCost($transaction_id, $income_id, $consume_amount, $date)
+    {
+        $model = new Cost();
+        $model->transaction_id = $transaction_id;
+        $model->income_id = $income_id;
+        $model->consume_amount = $consume_amount;
+        $model->date = $date;
+        if ($model->save()) {
+            return true;
+        } else {
+            return $model->errors;
+        }
     }
 }
 

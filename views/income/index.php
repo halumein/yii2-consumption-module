@@ -119,6 +119,13 @@ if($dateStop = yii::$app->request->get('date_stop')) {
                 'filter' => false,
             ],
             [
+                'attribute' => 'amount',
+                'value' => function($model) {
+                    return  $model->remain->amount;
+                },
+                'filter' => false,
+            ],
+            [
                 'attribute' => 'cost',
                 'filter' => false,
             ],
@@ -137,7 +144,7 @@ if($dateStop = yii::$app->request->get('date_stop')) {
                 'value' => 'user.fullName'
             ],
 
-            ['class' => 'yii\grid\ActionColumn', 'template' => '{update}',  'buttonOptions' => ['class' => 'btn btn-default'], 'options' => ['style' => 'width: 55px;']],
+            //['class' => 'yii\grid\ActionColumn', 'template' => '{update}',  'buttonOptions' => ['class' => 'btn btn-default'], 'options' => ['style' => 'width: 55px;']],
 
         ],
     ]); ?>
