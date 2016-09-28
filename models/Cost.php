@@ -42,10 +42,10 @@ class Cost extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'transaction_id' => 'Transaction ID',
-            'income_id' => 'Income ID',
-            'consume_amount' => 'Consume Amount',
-            'date' => 'Date',
+            'transaction_id' => 'Транзакция ID',
+            'income_id' => 'Приход ID',
+            'consume_amount' => 'Количество затраты',
+            'date' => 'Дата',
         ];
     }
 }
