@@ -220,10 +220,12 @@ class Consumption implements TransactionInterface, NormInterface, RemainInterfac
         }
     }
 
-    public function setRemainOutcome($transactionModel){
+    public function setRemainOutcome($transactionModel, $countTransaction = null){
         $arrayIncomeId = Income::find()->select(['id'])->where(['resource_id' => $transactionModel->resource_id])->asArray()->column();
         $arrayRemains = Remain::find()->where(['income_id' => $arrayIncomeId])->andWhere(['>', 'amount', 0])->all();
-        $countTransaction = $transactionModel->count;
+        if ($countTransaction == null){
+            $countTransaction = $transactionModel->count;
+        }
         foreach ($arrayRemains as $remain){
             if ($remain->amount >= $countTransaction){
                 $remain->amount = $remain->amount - $countTransaction;
@@ -247,6 +249,29 @@ class Consumption implements TransactionInterface, NormInterface, RemainInterfac
         return true;
     }
 
+    public function setNullCost($costModel)
+    {
+        $resource_id = $costModel->transaction->resource_id;
+        $arrayIncomeId = Income::find()->select(['id'])->where(['resource_id' => $resource_id])->asArray()->column();
+        $remain = Remain::find()->where(['income_id' => $arrayIncomeId])->andWhere(['>', 'amount', 0])->one();
+        $countTransaction = $costModel->consume_amount; //сколько списать нужно в Cost
+
+        if ($remain->amount >= $countTransaction){
+            $remain->amount = $remain->amount - $countTransaction;
+            $remain->save();
+            $this->updCost($costModel, $remain->income_id, null);
+        } else {
+            $countTransaction = $countTransaction - $remain->amount;
+            $consume_amount = $remain->amount;
+            $remain->amount = 0;
+            $remain->save();
+            $this->updCost($costModel, $remain->income_id, $consume_amount);
+            //$transactionModel = TransactionModel::find()->where(['id' => $costModel->transaction_id])->one();
+            $transactionModel = TransactionModel::findOne($costModel->transaction_id);
+            $this->setRemainOutcome($transactionModel, $countTransaction);
+        }
+    }
+
     public function addCost($transaction_id, $income_id, $consume_amount, $date)
     {
         $model = new Cost();
@@ -258,6 +283,19 @@ class Consumption implements TransactionInterface, NormInterface, RemainInterfac
             return true;
         } else {
             return $model->errors;
+        }
+    }
+
+    public function updCost($costModel, $income_id, $consume_amount)
+    {
+        $costModel->income_id = $income_id;
+        if (isset($consume_amount)){
+            $costModel->consume_amount = $consume_amount;
+        }
+        if ($costModel->save()) {
+            return true;
+        } else {
+            return $costModel->errors;
         }
     }
 }

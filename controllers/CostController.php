@@ -2,6 +2,7 @@
 
 namespace halumein\consumption\controllers;
 
+use halumein\consumption\models\search\CostSearch;
 use Yii;
 use halumein\consumption\models\Cost;
 use yii\data\ActiveDataProvider;
@@ -41,66 +42,27 @@ class CostController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single Cost model.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionView($id)
+    public function actionProblem()
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
+        $searchModel = new CostSearch();
+
+        $searchParams = Yii::$app->request->queryParams;
+        $searchParams['CostSearch']['income_id'] = null;
+
+        $dataProvider = $searchModel->search($searchParams);
+
+        return $this->render('problem', [
+            'dataProvider' => $dataProvider,
         ]);
     }
 
-    /**
-     * Creates a new Cost model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
+    public function actionResolveProblem()
     {
-        $model = new Cost();
+        //var_dump(Yii::$app->request->post()); //позже будет забирать с activeFields
+        //ищем все проблемные
+        //var_dump("йохохо");
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Updates an existing Cost model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Deletes an existing Cost model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        $this->redirect('problem');
     }
 
     /**
@@ -117,5 +79,22 @@ class CostController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    public function actionNullupdate()
+    {
+        $get = Yii::$app->request->get();
+        $id = $get['id'];
+
+
+        $model = $this->findModel($id);
+//        echo "<pre>";
+//        var_dump($model);
+//        die;
+        $array =  Yii::$app->consumption->setNullCost($model);
+
+        return true;
+
+
     }
 }

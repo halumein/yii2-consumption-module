@@ -2,14 +2,28 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\bootstrap\ActiveForm;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Стоимости расходов';
+$this->title = 'Расходы, не разнесенные на приходы';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="cost-index">
+<div class="problem-index">
+
+<!--    <p>-->
+<!--        --><?php //echo Html::a('Разнести затраты на приходы', ['problem'], ['class' => 'btn btn-success']) ?>
+<!--    </p>-->
+
+    <?php $form = ActiveForm::begin([
+        'action' => Url::to(['cost/resolve-problem'])
+    ]); ?>
+
+    <div class="form-group">
+        <?= Html::submitButton('Разнести затраты на приходы', ['class' =>  'btn btn-success']) ?>
+    </div
 
     <?php echo GridView::widget([
         'dataProvider' => $dataProvider,
@@ -25,16 +39,10 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'income_id',
             'consume_amount',
-            [
-                'attribute' => 'consume_cost',
-                'value' => function($model) {
-                    return  $model->consumeCost;
-                },
-                'filter' => false,
-            ],
             'date',
 
         ],
     ]); ?>
 
+    <?php $form = ActiveForm::end(); ?>
 </div>

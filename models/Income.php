@@ -68,4 +68,9 @@ class Income extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Remain::className(), ['income_id' => 'id']);
     }
+
+    public function getPrice()
+    {
+        return round($this->cost/$this->income, 2);
+    }
 }

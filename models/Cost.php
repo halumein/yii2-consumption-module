@@ -43,9 +43,29 @@ class Cost extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'transaction_id' => 'Транзакция ID',
+            'resource_id' => 'Ресурс',
             'income_id' => 'Приход ID',
             'consume_amount' => 'Количество затраты',
+            'consume_cost' => 'Сумма затраты',
             'date' => 'Дата',
         ];
     }
+
+    public function getTransaction()
+    {
+        $transaction = $this->hasOne(Transaction::className(), ['id' => 'transaction_id'])->one();
+        return $transaction;
+    }
+
+    public function getConsumeCost()
+    {
+        $income = $this->hasOne(Income::className(), ['id' => 'income_id'])->one();
+        if ($income !== null) {
+            $consumeCost = $income->price * $this->consume_amount;
+            return $consumeCost;
+        } else {
+            return null;
+        }
+    }
+
 }
