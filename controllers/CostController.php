@@ -58,10 +58,11 @@ class CostController extends Controller
 
     public function actionResolveProblem()
     {
-        //var_dump(Yii::$app->request->post()); //позже будет забирать с activeFields
         //ищем все проблемные
-        //var_dump("йохохо");
-
+        $arrNullCosts = Cost::find()->where(['income_id' => null])->all();
+        foreach ($arrNullCosts as $nullCostModel){
+            Yii::$app->consumption->setNullCost($nullCostModel);
+        }
         $this->redirect('problem');
     }
 
