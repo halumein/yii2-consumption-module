@@ -22,9 +22,9 @@ class m160923_092611_consumption_income extends Migration
                 'id'=> $this->primaryKey(11),
                 'date'=> $this->datetime()->notNull(),
                 'resource_id'=> $this->integer(11)->notNull(),
-                'income'=> $this->decimal(3, 10)->notNull()->defaultValue('0.000'),
-                'cost'=> $this->decimal(2, 10)->notNull()->defaultValue('0.00'),
-                'balance'=> $this->decimal(3, 10)->notNull()->defaultValue('0.000'),
+                'income'=> $this->decimal(19 ,3)->notNull()->defaultValue('0.000'),
+                'cost'=> $this->decimal(19, 2)->notNull()->defaultValue('0.00'),
+                'balance'=> $this->decimal(19, 3)->notNull()->defaultValue('0.000'),
             ],$tableOptions
         );
     }

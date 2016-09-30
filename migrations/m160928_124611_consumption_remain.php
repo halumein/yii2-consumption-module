@@ -21,7 +21,7 @@ class m160928_124611_consumption_remain extends Migration
             [
                 'id'=> $this->primaryKey(11),
                 'income_id'=> $this->integer(11)->notNull(),
-                'amount'=> $this->decimal(10, 3)->notNull(),
+                'amount'=> $this->decimal(19, 3)->notNull(),
             ],$tableOptions
         );
     }
