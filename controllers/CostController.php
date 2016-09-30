@@ -33,9 +33,10 @@ class CostController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Cost::find(),
-        ]);
+        $searchModel = new CostSearch();
+
+        $searchParams = Yii::$app->request->queryParams;
+        $dataProvider = $searchModel->search($searchParams);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
