@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <thead>
             <tr>
                 <th><input type="checkbox" id="selectall"/></th>
-                <th data-role="test">ID транзакции</th>
+                <th>ID транзакции</th>
                 <th>Ресурс</th>
                 <th>Количество затраты</th>
                 <th>Дата транзакции</th>

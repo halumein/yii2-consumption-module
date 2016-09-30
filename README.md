@@ -23,6 +23,9 @@ php yii migrate --migrationPath=vendor/halumein/yii2-consumption-module/migratio
     ]
 ```
 
+В конфигурационный файл также
+
+
 В модуль Order добавить обработку, которая отработает при создании нового заказа
 
 ,,,

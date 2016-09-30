@@ -69,7 +69,6 @@ class CostController extends Controller
             } else {
                 $this->redirect('problem');
             }
-
         } else {
             $this->redirect('problem');
             Yii::$app->getSession()->setFlash('error', "Не выборано ни одной строки!");

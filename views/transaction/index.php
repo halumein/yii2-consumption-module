@@ -6,6 +6,7 @@ use pistol88\service\models\Price;
 use halumein\consumption\models\Resource;
 use yii\helpers\ArrayHelper;
 use nex\datepicker\DatePicker;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\TransactionSearch */
@@ -83,6 +84,10 @@ if($dateStop = yii::$app->request->get('date_stop')) {
 
                 <div class="col-md-2">
                     <input class="form-control" type="submit" value="<?=Yii::t('order', 'Search');?>" />
+                </div>
+
+                <div class="col-md-2">
+                    <a href="<?= Url::to(['/consumption/transaction/index']) ?>" /><div class="form-control text-center">Cбросить все фильтры</div></a>
                 </div>
             </form>
         </div>
