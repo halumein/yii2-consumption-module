@@ -40,7 +40,7 @@ use kartik\select2\Select2;
         ]);
     ?>
 
-    <?php echo $form->field($model, 'consumption')->textInput(['maxlength' => true]) ?>
+    <?php echo $form->field($model, 'consumption')->textInput(['maxlength' => true, 'placeholder' => '0.000']) ?>
 
     <?php echo $form->field($model, 'comment')->textInput(['maxlength' => true]) ?>
 

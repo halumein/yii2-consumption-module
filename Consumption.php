@@ -2,6 +2,7 @@
 namespace halumein\consumption;
 
 use halumein\consumption\models\Cost;
+use halumein\consumption\interfaces\Cost as CostInterface;
 use halumein\consumption\models\Income;
 use halumein\consumption\models\Transaction as TransactionModel;
 use halumein\consumption\interfaces\Transaction as TransactionInterface;
@@ -14,7 +15,7 @@ use halumein\consumption\models\Category;
 use Yii;
 
 
-class Consumption implements TransactionInterface, NormInterface, RemainInterface
+class Consumption implements TransactionInterface, NormInterface, RemainInterface, CostInterface
 {
     public function init()
     {
@@ -249,6 +250,10 @@ class Consumption implements TransactionInterface, NormInterface, RemainInterfac
         return true;
     }
 
+    //==============================================================================
+    // методы для Интерфейса Cost
+    //==============================================================================
+
     public function setNullCost($costModel)
     {
         $resource_id = $costModel->transaction->resource_id;
@@ -256,19 +261,23 @@ class Consumption implements TransactionInterface, NormInterface, RemainInterfac
         $remain = Remain::find()->where(['income_id' => $arrayIncomeId])->andWhere(['>', 'amount', 0])->one();
         $countTransaction = $costModel->consume_amount; //сколько списать нужно в Cost
 
-        if ($remain->amount >= $countTransaction){
-            $remain->amount = $remain->amount - $countTransaction;
-            $remain->save();
-            $this->updCost($costModel, $remain->income_id, null);
+        if ($remain != null){
+            if ($remain->amount >= $countTransaction){
+                $remain->amount = $remain->amount - $countTransaction;
+                $remain->save();
+                $this->updCost($costModel, $remain->income_id, null);
+            } else {
+                $countTransaction = $countTransaction - $remain->amount;
+                $consume_amount = $remain->amount;
+                $remain->amount = 0;
+                $remain->save();
+                $this->updCost($costModel, $remain->income_id, $consume_amount);
+                //$transactionModel = TransactionModel::find()->where(['id' => $costModel->transaction_id])->one();
+                $transactionModel = TransactionModel::findOne($costModel->transaction_id);
+                $this->setRemainOutcome($transactionModel, $countTransaction);
+            }
         } else {
-            $countTransaction = $countTransaction - $remain->amount;
-            $consume_amount = $remain->amount;
-            $remain->amount = 0;
-            $remain->save();
-            $this->updCost($costModel, $remain->income_id, $consume_amount);
-            //$transactionModel = TransactionModel::find()->where(['id' => $costModel->transaction_id])->one();
-            $transactionModel = TransactionModel::findOne($costModel->transaction_id);
-            $this->setRemainOutcome($transactionModel, $countTransaction);
+            Yii::$app->getSession()->setFlash('error', "Не для всех выбранных ресурсов были приходы, распределение невозможно (или выполнено частично)!");
         }
     }
 

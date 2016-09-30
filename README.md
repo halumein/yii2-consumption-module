@@ -12,7 +12,7 @@ php composer require halumein/yii2-consumption-module "*"
 php yii migrate --migrationPath=vendor/halumein/yii2-consumption-module/migrations
 ```
 
-В конфигурационный файл приложения добавить модуль cashbox
+В конфигурационный файл приложения добавить модуль consumption
 
 ```php
     'modules' => [
@@ -42,7 +42,7 @@ php yii migrate --migrationPath=vendor/halumein/yii2-consumption-module/migratio
             foreach ($elements as $element) {
                 $countPrice = $element->count;
                 $price = $element->getModel();
-                Yii::$app->transaction->addForPrice($price, $countPrice, $ident);
+                Yii::$app->transaction->addByPrice($price, $countPrice, $ident);
             }
         }
     

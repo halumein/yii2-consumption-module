@@ -59,12 +59,23 @@ class CostController extends Controller
 
     public function actionResolveProblem()
     {
-        //ищем все проблемные
-        $arrNullCosts = Cost::find()->where(['income_id' => null])->all();
-        foreach ($arrNullCosts as $nullCostModel){
-            Yii::$app->consumption->setNullCost($nullCostModel);
+        if ($postData = Yii::$app->request->post('costIds')) {
+            if (count($postData) > 0) {
+                $arrNullCosts = Cost::find()->where(['id' => $postData])->all();
+                foreach ($arrNullCosts as $nullCostModel){
+                    Yii::$app->consumption->setNullCost($nullCostModel);
+                }
+                $this->redirect('problem');
+            } else {
+                $this->redirect('problem');
+            }
+
+        } else {
+            $this->redirect('problem');
+            Yii::$app->getSession()->setFlash('error', "Не выборано ни одной строки!");
         }
-        $this->redirect('problem');
+
+
     }
 
     /**

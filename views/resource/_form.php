@@ -18,13 +18,13 @@ use kartik\select2\Select2;
 
     <?php echo $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
-    <?php echo $form->field($model, 'dimension')->textInput(['maxlength' => true]) ?>
+    <?php echo $form->field($model, 'dimension')->textInput(['maxlength' => true, 'placeholder' => '0.000']) ?>
 
-    <?php echo $form->field($model, 'measures')->textInput(['maxlength' => true]) ?>
+    <?php echo $form->field($model, 'measures')->textInput(['maxlength' => true, 'placeholder' => '(штуки, килограммы, литры ит.д)']) ?>
 
-    <?php echo $form->field($model, 'base_unit')->textInput(['maxlength' => true]) ?>
+    <?php echo $form->field($model, 'base_unit')->textInput(['maxlength' => true, 'placeholder' => '0.000']) ?>
 
-    <?php echo $form->field($model, 'base_cost')->textInput(['maxlength' => true]) ?>
+    <?php echo $form->field($model, 'base_cost')->textInput(['maxlength' => true, 'placeholder' => '0.00 рублей']) ?>
 
     <?php
         echo $form->field($model, 'category_id')
