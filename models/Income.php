@@ -60,8 +60,8 @@ class Income extends \yii\db\ActiveRecord
 
     public function getUser()
     {
-        $userForConsumption = Yii::$app->getModule('consumption')->userForConsumption;
-        return $this->hasOne($userForConsumption::className(), ['id' => 'user_id']);
+        $userModel = Yii::$app->getModule('consumption')->userModel;
+        return $this->hasOne($userModel::className(), ['id' => 'user_id']);
     }
 
     public function getRemain()

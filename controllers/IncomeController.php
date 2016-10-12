@@ -6,6 +6,7 @@ use halumein\consumption\models\Resource;
 use Yii;
 use halumein\consumption\models\Income;
 use halumein\consumption\models\search\IncomeSearch;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -18,11 +19,14 @@ class IncomeController extends Controller
     public function behaviors()
     {
         return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['post'],
-                ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => $this->module->adminRoles,
+                    ],
+                ]
             ],
         ];
     }
@@ -37,8 +41,8 @@ class IncomeController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $resources = Resource::find()->all();
 
-        $userForConsumptionModel = $this->module->userForConsumption;
-        $activeUsers = $userForConsumptionModel::find()->all();
+        $userModelModel = $this->module->userModel;
+        $activeUsers = $userModelModel::find()->all();
 
         return $this->render('index', [
             'searchModel' => $searchModel,

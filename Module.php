@@ -5,7 +5,8 @@ namespace halumein\consumption;
 class Module extends \yii\base\Module
 {
     public $serviceModel;
-    public $userForConsumption = '\common\models\User';
+    public $adminRoles = ['superadmin', 'admin'];
+    public $userModel = '\common\models\User';
 
     public function init()
     {
