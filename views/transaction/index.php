@@ -83,7 +83,7 @@ if($dateStop = yii::$app->request->get('date_stop')) {
                 </div>
 
                 <div class="col-md-2">
-                    <input class="form-control" type="submit" value="<?=Yii::t('order', 'Search');?>" />
+                    <input class="form-control btn-success" type="submit" value="Поиск" />
                 </div>
 
                 <div class="col-md-3">
@@ -105,7 +105,11 @@ if($dateStop = yii::$app->request->get('date_stop')) {
             [
                 'attribute' =>'type',
                 'contentOptions' => [
-                    'width' => 80]
+                    'width' => 80
+                ],
+                'value' => function ($model) {
+                    return ($model->type === 'income') ? 'Приход' : 'Расход';
+                },
             ],
             [
                 'attribute' => 'element_id',
@@ -115,10 +119,15 @@ if($dateStop = yii::$app->request->get('date_stop')) {
                     ArrayHelper::map(Price::find()->all(), 'id', 'name'),
                     ['class' => 'form-control', 'prompt' => 'Все услуги']
                 ),
-                'value' => 'element.name',
-//                'contentOptions' => [
-//                    'width' => 450],
-
+                'value' => function ($model) {
+                    if ($model->ident === 0 && $model->type === 'income') {
+                        return 'Приход на склад';
+                    } else if ($model->ident === 0 && $model->type === 'outcome') {
+                        return 'Списание со склада';
+                    } else {
+                        return $model->element->name;
+                    }
+                },
             ],
             [
                 'attribute' => 'resource_id',
@@ -134,12 +143,12 @@ if($dateStop = yii::$app->request->get('date_stop')) {
 //                'contentOptions' => [
 //                    'width' => 450],
             ],
-            [
-                'attribute' => 'amount',
-                'filter' => false,
-                'contentOptions' => [
-                    'width' => 130],
-            ],
+            // [
+            //     'attribute' => 'amount',
+            //     'filter' => false,
+            //     'contentOptions' => [
+            //         'width' => 130],
+            // ],
             [
                 'attribute' => 'date',
                 'contentOptions' => [

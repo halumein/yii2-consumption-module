@@ -2,6 +2,7 @@
 
 namespace halumein\consumption\models;
 
+use halumein\consumption\models\Cost;
 use halumein\consumption\models\Resource;
 use Yii;
 
@@ -55,7 +56,7 @@ class Transaction extends \yii\db\ActiveRecord
         return [
             'type' => 'Приход/Расход',
             'date' => 'Дата',
-            'ident' => 'ID',
+            'ident' => 'ID', // order id
             'element_id' => 'Услуга',
             'resource_id' => 'Кол-во ресурса',
             'count' => 'Кол-во расхода',
@@ -84,5 +85,10 @@ class Transaction extends \yii\db\ActiveRecord
     public function getCategory()
     {
         return $this->hasOne(Category::className(), ['id' => 'category_id'])->viaTable('consumption_resource', ['id' => 'resource_id']);
+    }
+
+    public function getCost()
+    {
+        return $this->hasOne(Cost::className(), ['transaction_id' => 'id']);
     }
 }

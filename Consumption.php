@@ -26,7 +26,7 @@ class Consumption implements TransactionInterface, NormInterface, RemainInterfac
     // методы для Интерфейса Transaction
     //==============================================================================
 
-    public function get($id)
+    public function getTransaction($id)
     {
         return TransactionModel::findOne($id);
     }
@@ -55,23 +55,71 @@ class Consumption implements TransactionInterface, NormInterface, RemainInterfac
             $model->element_model = $params['element_model'];
         }
 
+        if (isset($params['comment'])) {
+            $model->comment = $params['comment'];
+        }
+
+        if (isset($params['deleted'])) {
+            $model->deleted = $params['deleted'];
+        }
+
         $lastAmount = $model::find()->where(['resource_id' => $resource_id])->orderBy(['date' => SORT_DESC])->one();
 
         if ($lastAmount) {
-            if ($type === 'income') {
-                $amount = $lastAmount->amount + $count;
-            } elseif ($type === 'outcome'){
-                $amount = $lastAmount->amount - $count;
-            }
+            $lastAmount = $lastAmount->amount;
         } else {
-            $amount = $count;
+            $lastAmount = 0;
         }
+
+        if ($type === 'income') {
+            $amount = $lastAmount + $count;
+        } elseif ($type === 'outcome'){
+            $amount = $lastAmount - $count;
+        }
+
 
         $model->amount = $amount;
 
         if ($model->save() && $model->type == 'outcome'){
             $this->setRemainOutcome($model);
         }
+    }
+
+
+    /**
+    * Отменят все транзакции по ордеру
+    *  @property integer $orderId - id заказа
+    */
+    public function rollbackOrderConsumption($orderId)
+    {
+        $operations = TransactionModel::find()->where(['ident' => $orderId, 'deleted' => null])->all();
+        $params = [];
+
+        if ($operations) {
+            foreach ($operations as $key => $transaction) {
+
+                $params['ident'] = $transaction->ident;
+                $params['element_id'] = $transaction->element_id;
+                $params['element_model'] = $transaction->element_model;
+                $params['ident'] = $transaction->ident;
+                $params['comment'] = 'Отмена заказа';
+
+                $this->addTransaction('income', $transaction->resource_id, $transaction->count, $params);
+
+                $transaction->deleted = date("Y-m-d H:i:s");
+                $transaction->save();
+
+                // вернём в остатки
+                $remain = Remain::find()->where(['income_id' => $transaction->cost->income_id])->one();
+                if ($remain) {
+                    $remain->amount += $transaction->count;
+                    $remain->save();
+                }
+
+                $transaction->cost->delete();
+            }
+        }
+        return true;
     }
 
     public function addByPrice($price, $countPrice, $ident)
@@ -160,7 +208,6 @@ class Consumption implements TransactionInterface, NormInterface, RemainInterfac
      */
     public function getByResource(Resource $resourceModel, $dateStart, $dateStop)
     {
-
         $transactionByResource = TransactionModel::find();
         $transactionByResource->andWhere(['resource_id' => $resourceModel->id]);
         if($dateStart){
@@ -175,8 +222,7 @@ class Consumption implements TransactionInterface, NormInterface, RemainInterfac
                 $transactionByResource->andWhere('date <= :dateStop', [':dateStop' => $dateStop]);
             }
         }
-        $arrayTransactionByResource = $transactionByResource->all();
-        return $arrayTransactionByResource;
+        return $transactionByResource->all();;
     }
 
     public function getByCategory(Category $categoryModel, $dateStart, $dateStop)

@@ -2,6 +2,7 @@
 
 namespace halumein\consumption\models;
 
+use halumein\consumption\models\Income;
 use Yii;
 
 /**
@@ -66,6 +67,11 @@ class Cost extends \yii\db\ActiveRecord
         } else {
             return null;
         }
+    }
+
+    public function getIncome()
+    {
+        return $this->hasOne(Income::className(), ['id' => 'income_id']);
     }
 
 }

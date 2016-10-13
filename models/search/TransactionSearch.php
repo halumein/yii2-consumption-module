@@ -66,9 +66,9 @@ class TransactionSearch extends Transaction
             'resource_id' => $this->resource_id,
         ]);
 
-        $query->andWhere([
-            'deleted' => $this->deleted,
-        ]);
+        // $query->andWhere([
+        //     'deleted' => $this->deleted,
+        // ]);
 
         $query->andFilterWhere(['like', 'element_model', $this->element_model]);
 
