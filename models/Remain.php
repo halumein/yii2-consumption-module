@@ -40,8 +40,8 @@ class Remain extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'income_id' => 'Income ID',
-            'amount' => 'Amount',
+            'income_id' => 'ID Прихода',
+            'amount' => 'Количество',
         ];
     }
 }

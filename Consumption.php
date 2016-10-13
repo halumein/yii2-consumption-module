@@ -56,11 +56,17 @@ class Consumption implements TransactionInterface, NormInterface, RemainInterfac
         }
 
         $lastAmount = $model::find()->where(['resource_id' => $resource_id])->orderBy(['date' => SORT_DESC])->one();
-        if ($type == 'income') {
-            $amount = $lastAmount->amount + $count;
-        } elseif ($type == 'outcome'){
-            $amount = $lastAmount->amount - $count;
+
+        if ($lastAmount) {
+            if ($type === 'income') {
+                $amount = $lastAmount->amount + $count;
+            } elseif ($type === 'outcome'){
+                $amount = $lastAmount->amount - $count;
+            }
+        } else {
+            $amount = $count;
         }
+
         $model->amount = $amount;
 
         if ($model->save() && $model->type == 'outcome'){
@@ -308,4 +314,3 @@ class Consumption implements TransactionInterface, NormInterface, RemainInterfac
         }
     }
 }
-
