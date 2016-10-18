@@ -24,9 +24,23 @@ if($dateStop = yii::$app->request->get('date_stop')) {
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <p>
-        <?php echo Html::a('Добавить приход', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+    <div class="row">
+        <div class="col-sm-4 col-md-3">
+            <p>
+                <?php echo Html::a('Добавить приход', ['create'], ['class' => 'btn btn-success']) ?>
+            </p>
+        </div>
+        <div class="col-sm-8 col-md-9" >
+            <ul class="nav nav-pills pull-right">
+                <li><a href="<?= Url::to(['/consumption/category/index']) ?>">Категории</a></li>
+                <li><a href="<?= Url::to(['/consumption/resource/index']) ?>">Ресурсы</a></li>
+                <li><a href="<?= Url::to(['/consumption/norm/index']) ?>">Нормы</a></li>
+                <li><a href="<?= Url::to(['/consumption/cost/index']) ?>">Расходы</a></li>
+                <li class="active"><a href="<?= Url::to(['/consumption/income/index']) ?>">Приходы</a></li>
+                <li><a href="<?= Url::to(['/consumption/transaction/index']) ?>">Операции</a></li>
+            </ul>
+        </div>
+    </div>
 
     <div class="panel panel-primary">
         <div class="panel-heading">
@@ -126,7 +140,7 @@ if($dateStop = yii::$app->request->get('date_stop')) {
             [
                 'attribute' => 'amount',
                 'value' => function($model) {
-                    return  $model->remain->amount;
+                    return  $model->remain->amount . " " . $model->resource->measures;
                 },
                 'filter' => false,
             ],

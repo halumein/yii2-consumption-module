@@ -58,7 +58,7 @@ class Transaction extends \yii\db\ActiveRecord
             'date' => 'Дата',
             'ident' => 'ID', // order id
             'element_id' => 'Услуга',
-            'resource_id' => 'Кол-во ресурса',
+            'resource_id' => 'Ресурс',
             'count' => 'Кол-во расхода',
             'amount' => 'Остаток',
             'comment' => 'Комментарий',

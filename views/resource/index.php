@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\grid\GridView;
 use halumein\consumption\models\Category;
 use yii\helpers\ArrayHelper;
@@ -15,72 +16,89 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="resource-index">
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <div class="row">
+        <div class="col-sm-4 col-md-3">
+            <p>
+                <?php echo Html::a('Добавить ресурс', ['create'], ['class' => 'btn btn-success']) ?>
+            </p>
+        </div>
+        <div class="col-sm-8 col-md-9" >
+            <ul class="nav nav-pills pull-right">
+                <li><a href="<?= Url::to(['/consumption/category/index']) ?>">Категории</a></li>
+                <li class="active"><a href="<?= Url::to(['/consumption/resource/index']) ?>">Ресурсы</a></li>
+                <li><a href="<?= Url::to(['/consumption/norm/index']) ?>">Нормы</a></li>
+                <li><a href="<?= Url::to(['/consumption/cost/index']) ?>">Расходы</a></li>
+                <li><a href="<?= Url::to(['/consumption/income/index']) ?>">Приходы</a></li>
+                <li><a href="<?= Url::to(['/consumption/transaction/index']) ?>">Операции</a></li>
+            </ul>
+        </div>
+    </div>
 
-    <p>
-        <?php echo Html::a('Добавить ресурс', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+    <div class="row">
+        <div class="col-sm-12">
+            <?php echo GridView::widget([
+                'dataProvider' => $dataProvider,
+                'filterModel' => $searchModel,
+                'columns' => [
+                    [
+                        'attribute' => 'id',
+                        'filter' => false,
+                        'contentOptions' => [
+                            'width' => 35
+                        ]
+                    ],
+                    [
+                        'attribute' => 'title',
+                        'filter' => false,
+                        'contentOptions' => [
+                            'width' => 155
+                        ]
+                    ],
+                    // [
+                    //     'attribute' => 'dimension',
+                    //     'filter' => false,
+                    //     'contentOptions' => [
+                    //         'width' => 120
+                    //     ]
+                    // ],
+                    [
+                        'attribute' => 'measures',
+                        'filter' => false,
+                        'contentOptions' => [
+                            'width' => 150
+                        ]
+                    ],
+                    // [
+                    //     'attribute' => 'base_unit',
+                    //     'filter' => false,
+                    //     'contentOptions' => [
+                    //         'width' => 180
+                    //     ]
+                    // ],
+                    // [
+                    //     'attribute' => 'base_cost',
+                    //     'filter' => false
+                    // ],
+                    [
+                        'attribute' => 'category_id',
+                        'filter' => Html::activeDropDownList(
+                        $searchModel,
+                        'category_id',
+                        ArrayHelper::map(Category::find()->all(), 'id', 'name'),
+                        ['class' => 'form-control', 'prompt' => 'Все категории']
+                        ),
+                        'value' => 'category.name'
+                        ],
+                        [
+                        'attribute' => 'comment',
+                        'filter' => false,
+                        ],
 
-    <?php echo GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            [
-                'attribute' => 'id',
-                'filter' => false,
-                'contentOptions' => [
-                    'width' => 35
-                ]
-            ],
-            [
-                'attribute' => 'title',
-                'filter' => false,
-                'contentOptions' => [
-                    'width' => 155
-                ]
-            ],
-            [
-                'attribute' => 'dimension',
-                'filter' => false,
-                'contentOptions' => [
-                    'width' => 120
-                ]
-            ],
-            [
-                'attribute' => 'measures',
-                'filter' => false,
-                'contentOptions' => [
-                    'width' => 150
-                ]
-            ],
-            [
-                'attribute' => 'base_unit',
-                'filter' => false,
-                'contentOptions' => [
-                    'width' => 180
-                ]
-            ],
-            [
-                'attribute' => 'base_cost',
-                'filter' => false
-            ],
-            [
-                'attribute' => 'category_id',
-                'filter' => Html::activeDropDownList(
-                    $searchModel,
-                    'category_id',
-                    ArrayHelper::map(Category::find()->all(), 'id', 'name'),
-                    ['class' => 'form-control', 'prompt' => 'Все категории']
-                ),
-                'value' => 'category.name'
-            ],
-            [
-                'attribute' => 'comment',
-                'filter' => false,
-            ],
+                        ['class' => 'yii\grid\ActionColumn', 'template' => '{update}{delete}',  'buttonOptions' => ['class' => 'btn btn-default'], 'options' => ['style' => 'width: 110px;']],
 
-            ['class' => 'yii\grid\ActionColumn', 'template' => '{update}{delete}',  'buttonOptions' => ['class' => 'btn btn-default'], 'options' => ['style' => 'width: 110px;']],
-
-        ],
-    ]); ?>
+                        ],
+                        ]); ?>
+        </div>
+    </div>
 
 </div>
