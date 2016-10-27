@@ -44,6 +44,7 @@ class CostController extends Controller
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel
         ]);
     }
 

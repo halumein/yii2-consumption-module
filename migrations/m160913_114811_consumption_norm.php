@@ -27,12 +27,10 @@ class m160913_114811_consumption_norm extends Migration
                 'comment'=> $this->string(500)->notNull(),
             ],$tableOptions
         );
-        $this->createIndex('resource_id','{{%consumption_norm}}','resource_id',true);
     }
 
     public function safeDown()
     {
-        $this->dropIndex('resource_id', '{{%consumption_norm}}');
         $this->dropTable('{{%consumption_norm}}');
     }
 }

@@ -6,9 +6,6 @@ use yii\helpers\ArrayHelper;
 use nex\datepicker\DatePicker;
 use yii\helpers\Url;
 
-/* @var $this yii\web\View */
-/* @var $searchModel halumein\cashbox\models\search\IncomeSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Приходы';
 $this->params['breadcrumbs'][] = $this->title;
@@ -25,20 +22,15 @@ if($dateStop = yii::$app->request->get('date_stop')) {
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <div class="row">
-        <div class="col-sm-4 col-md-3">
+        <div class="col-sm-2 col-md-5 text-right">
             <p>
-                <?php echo Html::a('Добавить приход', ['create'], ['class' => 'btn btn-success']) ?>
+                <?php echo Html::a('Оприходовать', ['create'], ['class' => 'btn btn-success']) ?>
             </p>
         </div>
-        <div class="col-sm-8 col-md-9" >
-            <ul class="nav nav-pills pull-right">
-                <li><a href="<?= Url::to(['/consumption/category/index']) ?>">Категории</a></li>
-                <li><a href="<?= Url::to(['/consumption/resource/index']) ?>">Ресурсы</a></li>
-                <li><a href="<?= Url::to(['/consumption/norm/index']) ?>">Нормы</a></li>
-                <li><a href="<?= Url::to(['/consumption/cost/index']) ?>">Расходы</a></li>
-                <li class="active"><a href="<?= Url::to(['/consumption/income/index']) ?>">Приходы</a></li>
-                <li><a href="<?= Url::to(['/consumption/transaction/index']) ?>">Операции</a></li>
-            </ul>
+        <div class="col-sm-8 col-md-7" >
+            <div class="service-menu">
+                <?=$this->render('../_common/menu');?>
+            </div>
         </div>
     </div>
 
@@ -99,7 +91,7 @@ if($dateStop = yii::$app->request->get('date_stop')) {
                 </div>
 
                 <div class="col-md-3">
-                    <a href="<?= Url::to(['/consumption/income/index']) ?>" /><div class="form-control text-center">Cбросить все фильтры</div></a>
+                    <a class="btn btn-default" href="<?= Url::to(['/consumption/income/index']) ?>" />Cбросить все фильтры</a>
                 </div>
             </form>
         </div>
@@ -111,20 +103,20 @@ if($dateStop = yii::$app->request->get('date_stop')) {
         'columns' => [
             //['class' => 'yii\grid\SerialColumn'],
 
-            [
-                'attribute' => 'id',
-                'filter' => false,
-                'contentOptions' => [
-                    'width' => 35
-                ]
-            ],
+            // [
+            //     'attribute' => 'id',
+            //     'filter' => false,
+            //     'contentOptions' => [
+            //         'width' => 35
+            //     ]
+            // ],
             [
                 'attribute' => 'resource_id',
                 'filter' => Html::activeDropDownList(
                     $searchModel,
                     'resource_id',
                     ArrayHelper::map($resources, 'id', 'name'),
-                    ['class' => 'form-control', 'prompt' => 'нет отбора']
+                    ['class' => 'form-control', 'prompt' => 'Все ресурсы']
                 ),
                 'value' => function($model) {
                     return  $model->resource->title;

@@ -27,23 +27,19 @@ if($dateStop = yii::$app->request->get('date_stop')) {
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <div class="row">
-        <div class="col-sm-4 col-md-3">
+        <div class="col-sm-2 col-md-2">
+        </div>
+        <div class="col-sm-2 col-md-3 text-right">
             <p>
-                <?php //echo Html::a('Добавить транзакцию', ['create'], ['class' => 'btn btn-success']) ?>
+                <?php echo Html::a('Оприходовать', [Url::to(['/consumption/income/create'])], ['class' => 'btn btn-success']) ?>
             </p>
         </div>
-        <div class="col-sm-8 col-md-9" >
-            <ul class="nav nav-pills pull-right">
-                <li><a href="<?= Url::to(['/consumption/category/index']) ?>">Категории</a></li>
-                <li><a href="<?= Url::to(['/consumption/resource/index']) ?>">Ресурсы</a></li>
-                <li><a href="<?= Url::to(['/consumption/norm/index']) ?>">Нормы</a></li>
-                <li><a href="<?= Url::to(['/consumption/cost/index']) ?>">Расходы</a></li>
-                <li><a href="<?= Url::to(['/consumption/income/index']) ?>">Приходы</a></li>
-                <li class="active"><a href="<?= Url::to(['/consumption/transaction/index']) ?>">Операции</a></li>
-            </ul>
+        <div class="col-sm-8 col-md-7" >
+            <div class="service-menu">
+                <?=$this->render('../_common/menu');?>
+            </div>
         </div>
     </div>
-    <br>
 
     <div class="panel panel-primary">
         <div class="panel-heading">
@@ -150,7 +146,7 @@ if($dateStop = yii::$app->request->get('date_stop')) {
                     $searchModel,
                     'resource_id',
                     ArrayHelper::map(Resource::find()->all(), 'id', 'name'),
-                    ['class' => 'form-control', 'prompt' => 'нет отбора']
+                    ['class' => 'form-control', 'prompt' => 'Все ресурсы']
                 ),
                 'value' => function($model) {
                         return  $model->resource->title . ' : ' . $model->count;

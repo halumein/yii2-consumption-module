@@ -10,27 +10,28 @@ use yii\helpers\ArrayHelper;
 /* @var $searchModel app\models\search\ResourceSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Ресурсы';
+$this->title = 'Расходные материалы';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="resource-index">
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+
     <div class="row">
-        <div class="col-sm-4 col-md-3">
+        <div class="col-sm-2 col-md-2">
             <p>
-                <?php echo Html::a('Добавить ресурс', ['create'], ['class' => 'btn btn-success']) ?>
+                <?php echo Html::a('Добавить расходник', ['create'], ['class' => 'btn btn-success']) ?>
             </p>
         </div>
-        <div class="col-sm-8 col-md-9" >
-            <ul class="nav nav-pills pull-right">
-                <li><a href="<?= Url::to(['/consumption/category/index']) ?>">Категории</a></li>
-                <li class="active"><a href="<?= Url::to(['/consumption/resource/index']) ?>">Ресурсы</a></li>
-                <li><a href="<?= Url::to(['/consumption/norm/index']) ?>">Нормы</a></li>
-                <li><a href="<?= Url::to(['/consumption/cost/index']) ?>">Расходы</a></li>
-                <li><a href="<?= Url::to(['/consumption/income/index']) ?>">Приходы</a></li>
-                <li><a href="<?= Url::to(['/consumption/transaction/index']) ?>">Операции</a></li>
-            </ul>
+        <div class="col-sm-2 col-md-3 text-right">
+            <p>
+                <?php echo Html::a('Оприходовать', [Url::to(['/consumption/income/create'])], ['class' => 'btn btn-success']) ?>
+            </p>
+        </div>
+        <div class="col-sm-8 col-md-7" >
+            <div class="service-menu">
+                <?=$this->render('../_common/menu');?>
+            </div>
         </div>
     </div>
 
@@ -40,13 +41,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 'dataProvider' => $dataProvider,
                 'filterModel' => $searchModel,
                 'columns' => [
-                    [
-                        'attribute' => 'id',
-                        'filter' => false,
-                        'contentOptions' => [
-                            'width' => 35
-                        ]
-                    ],
+                    // [
+                    //     'attribute' => 'id',
+                    //     'filter' => false,
+                    //     'contentOptions' => [
+                    //         'width' => 35
+                    //     ]
+                    // ],
                     [
                         'attribute' => 'title',
                         'filter' => false,

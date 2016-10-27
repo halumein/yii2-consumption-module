@@ -56,7 +56,7 @@ class Transaction extends \yii\db\ActiveRecord
         return [
             'type' => 'Приход/Расход',
             'date' => 'Дата',
-            'ident' => 'ID', // order id
+            'ident' => 'order ID', // order id
             'element_id' => 'Услуга',
             'resource_id' => 'Ресурс',
             'count' => 'Кол-во расхода',
