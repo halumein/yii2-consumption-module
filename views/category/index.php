@@ -5,27 +5,11 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\bootstrap\ActiveForm;
 
-/* @var $this yii\web\View */
-/* @var $searchModel app\models\CategorySearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
-
 $this->title = 'Категории';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="category-index">
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <div class="row">
-        <?php $form = ActiveForm::begin(); ?>
-        <div class="col-sm-12 col-md-4">
-            <?php echo $form->field($newCategoryModel, 'name')->textInput(['maxlength' => true, 'placeholder' => 'наименование'])->label(false) ?>
-        </div>
-        <div class="col-sm-3 col-md-2">
-            <?php echo Html::submitButton('Добавить категорию', ['class' => 'btn btn-success']) ?>
-        </div>
-        <?php ActiveForm::end(); ?>
-    </div>
     <div class="row">
         <div class="col-sm-2 col-md-5">
             <p>
@@ -38,6 +22,26 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         </div>
     </div>
+    <br>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">Добавить категорию</h3>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <?php $form = ActiveForm::begin(); ?>
+                <div class="col-sm-12 col-md-4">
+                    <?php echo $form->field($newCategoryModel, 'name')->textInput(['maxlength' => true, 'placeholder' => 'наименование'])->label(false) ?>
+                </div>
+                <div class="col-sm-3 col-md-2">
+                    <?php echo Html::submitButton('Добавить', ['class' => 'btn btn-success']) ?>
+                </div>
+                <?php ActiveForm::end(); ?>
+            </div>
+        </div>
+    </div>
+
+
 
     <div class="row">
         <div class="col-sm-12">
@@ -47,7 +51,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 'columns' => [
 
                     //'id',
-                    'name',
+                    [
+                        'attribute' => 'name',
+                        'format' => 'html',
+                        'value' => function($model) {
+                            return Html::a($model->name, [Url::to(['/consumption/category/update', 'id' => $model->id])]);
+                        }
+                    ],
                     //'parent',
 
                     ['class' => 'yii\grid\ActionColumn', 'template' => '{update}{delete}',  'buttonOptions' => ['class' => 'btn btn-default'], 'options' => ['style' => 'width: 110px;']],

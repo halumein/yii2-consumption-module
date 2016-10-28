@@ -10,17 +10,25 @@ use yii\bootstrap\ActiveForm;
 
 <div class="category-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <div class="row">
+        <?php $form = ActiveForm::begin(); ?>
+        <div class="col-sm-12">
+            <?php echo $form->errorSummary($model); ?>
+        </div>
+        <div class="col-sm-10 col-md-4">
+            <?= $form
+                    ->field($model, 'name')
+                    ->textInput(['maxlength' => true, 'placeholder' => 'Название категории'])
+                    ->label(false)?>
+        </div>
+        <div class="col-sm-2 col-md-2">
+            <?php echo Html::submitButton($model->isNewRecord ? 'Добавить' : 'Изменить название', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        </div>
+    </div>
 
-    <?php echo $form->errorSummary($model); ?>
 
-    <?php echo $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
     <?php //echo $form->field($model, 'parent')->textInput() ?>
-
-    <div class="form-group">
-        <?php echo Html::submitButton($model->isNewRecord ? 'Добавить' : 'Изменить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-    </div>
 
     <?php ActiveForm::end(); ?>
 

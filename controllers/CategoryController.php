@@ -4,6 +4,8 @@ namespace halumein\consumption\controllers;
 
 use Yii;
 use halumein\consumption\models\Category;
+use halumein\consumption\models\Resource;
+use halumein\consumption\models\search\ResourceSearch;
 use halumein\consumption\models\search\CategorySearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -89,13 +91,26 @@ class CategoryController extends Controller
     {
         $model = $this->findModel($id);
 
+        $newResourceModel = new Resource();
+        if ($newResourceModel->load(Yii::$app->request->post())) {
+            $newResourceModel->category_id = $id;
+            $newResourceModel->save();
+        }
+
+        $resourceSearchModel = new ResourceSearch();
+        $resourceDataProvider = $resourceSearchModel->searchByCategory($id);
+
+
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index']);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
         }
+
+        return $this->render('update', [
+            'model' => $model,
+            'resourceDataProvider' => $resourceDataProvider,
+            'newResourceModel' => $newResourceModel
+        ]);
     }
 
     /**

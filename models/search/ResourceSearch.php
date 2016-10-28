@@ -66,4 +66,19 @@ class ResourceSearch extends Resource
 
         return $dataProvider;
     }
+
+    public function searchByCategory($categoryId)
+    {
+        $query = Resource::find();
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        $query->andFilterWhere([
+            'category_id' => $categoryId,
+        ]);
+
+        return $dataProvider;
+    }
 }

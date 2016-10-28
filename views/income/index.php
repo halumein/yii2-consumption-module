@@ -7,7 +7,7 @@ use nex\datepicker\DatePicker;
 use yii\helpers\Url;
 
 
-$this->title = 'Приходы';
+$this->title = 'Остатки';
 $this->params['breadcrumbs'][] = $this->title;
 if($dateStart = yii::$app->request->get('date_start')) {
     $dateStart = date('d.m.Y', strtotime($dateStart));

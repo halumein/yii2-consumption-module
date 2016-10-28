@@ -1,9 +1,11 @@
 <?php
 
+use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\ArrayHelper;
 use kartik\select2\Select2;
+use halumein\consumption\models\Category;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Norm */
@@ -28,10 +30,24 @@ use kartik\select2\Select2;
         ]);
     ?>
 
+    <?= $form->field($model, 'resource_category')->dropDownList(
+            ArrayHelper::map(Category::find()->all(), 'id', 'name'),
+            [
+                'prompt' => 'Все категории',
+                'onchange'=>'
+                    $.get( "'.Url::toRoute('/consumption/resource/get-by-category').'", { categoryId: $(this).val() } )
+                        .done(function( data ) {
+                            $( "#'.Html::getInputId($model, 'resource_id').'" ).html( data );
+                        }
+                    );
+                '
+            ]
+            )->label('Категория ресурса')?>
+
     <?php
-    echo $form->field($model, 'resource_id')
+        echo $form->field($model, 'resource_id')
         ->widget(Select2::classname(), [
-            'data' => ArrayHelper::map($resources, 'id', 'title'),
+            'data' => ArrayHelper::map($resources, 'id', 'name'),
             'language' => 'ru',
             'options' => ['placeholder' => 'Выберите ресурс ...'],
             'pluginOptions' => [

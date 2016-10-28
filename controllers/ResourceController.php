@@ -40,9 +40,6 @@ class ResourceController extends Controller
     {
 
         $searchModel = new ResourceSearch();
-
-        //$searchParams = Yii::$app->request->queryParams;
-        //$dataProvider = $searchModel->search($searchParams);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -115,6 +112,20 @@ class ResourceController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionGetByCategory($categoryId)
+    {
+        if (!$categoryId) {
+            $rows = Resource::find()->all();
+        } else {
+            $rows = Resource::find()->where(['category_id' => $categoryId])->all();
+        }
+        if(count($rows)>0){
+            foreach($rows as $row){
+                echo "<option value='$row->id'>$row->name</option>";
+            }
+        }
     }
 
     /**

@@ -16,6 +16,7 @@ use Yii;
  */
 class Income extends \yii\db\ActiveRecord
 {
+    public $resource_category;
     /**
      * @inheritdoc
      */

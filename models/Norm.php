@@ -21,6 +21,7 @@ use halumein\consumption\models\Resource;
  */
 class Norm extends \yii\db\ActiveRecord
 {
+    public $resource_category;
     /**
      * @inheritdoc
      */

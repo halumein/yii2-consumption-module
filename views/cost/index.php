@@ -135,8 +135,13 @@ $this->params['breadcrumbs'][] = $this->title;
                         },
                         'filter' => false,
                     ],
-                    'date',
-
+                    [
+                        'attribute' => 'date',
+                        'value' => function($model) {
+                            return date('d.m.Y H:i:s', strtotime($model->date));
+                        },
+                        'options' => ['style' => 'width: 100px;'],
+                    ]
                 ],
             ]); ?>
         </div>
