@@ -103,7 +103,7 @@ $this->params['breadcrumbs'][] = 'Изменить';
                                     'data-pjax' => '0',
                                     'class' => 'btn btn-default'
                                 ];
-                                return Html::a('<span class="glyphicon glyphicon-trash"></span>', Url::to(['/consumption/resource/delete', 'id' => $model->id]), $this->options);
+                                return Html::a('<span class="glyphicon glyphicon-trash"></span>', Url::to(['/consumption/resource/delete', 'id' => $model->id]), $options);
                             },
                         ],
                         'options' => ['style' => 'width: 110px;']
