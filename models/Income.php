@@ -47,8 +47,8 @@ class Income extends \yii\db\ActiveRecord
             'id' => 'ID',
             'date' => 'Дата',
             'resource_id' => 'Ресурс',
-            'income' => 'Приход',
-            'amount' => 'Остаток',
+            'income' => 'Количество (в ед. изм.)',
+            'amount' => 'Остаток (в ед. изм.)',
             'cost' => 'Цена закупки (общая)',
             'user_id' => 'Оприходовал',
         ];
