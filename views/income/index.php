@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 use yii\helpers\ArrayHelper;
 use nex\datepicker\DatePicker;
 use yii\helpers\Url;

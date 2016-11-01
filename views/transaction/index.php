@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 use pistol88\service\models\Price;
 use halumein\consumption\models\Resource;
 use yii\helpers\ArrayHelper;
