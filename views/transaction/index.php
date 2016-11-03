@@ -31,7 +31,7 @@ if($dateStop = yii::$app->request->get('date_stop')) {
         </div>
         <div class="col-sm-2 col-md-3 text-right">
             <p>
-                <?php echo Html::a('Оприходовать', [Url::to(['/consumption/income/create'])], ['class' => 'btn btn-success']) ?>
+                <?php echo Html::a('Оприходовать', ['/consumption/income/create'], ['class' => 'btn btn-success']) ?>
             </p>
         </div>
         <div class="col-sm-8 col-md-7" >
