@@ -55,7 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'attribute' => 'name',
                         'format' => 'html',
                         'value' => function($model) {
-                            return Html::a($model->name, [Url::to(['/consumption/category/update', 'id' => $model->id])]);
+                            return Html::a($model->name, ['/consumption/category/update', 'id' => $model->id]);
                         }
                     ],
                     //'parent',
