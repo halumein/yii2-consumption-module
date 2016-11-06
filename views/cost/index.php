@@ -90,7 +90,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
 
                 <div class="col-md-3">
-                    <a class="btn btn-default" href="<?= Url::to(['/consumption/cost/index']) ?>" />Cбросить все фильтры</a>
+                    <a class="btn btn-default" href="<?= Url::to(['/consumption/cost/index']) ?>">Cбросить все фильтры</a>
                 </div>
             </form>
         </div>
@@ -108,6 +108,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     [
                         'label' => 'Объект',
                         'value' => function($model) {
+                            if(!$model->transaction) {
+                                return null;    
+                            }
                             $elementModel = $model->transaction->element_model;
                             $element = $elementModel::findOne($model->transaction->element_id);
                             return $element->name;
