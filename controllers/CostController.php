@@ -42,9 +42,32 @@ class CostController extends Controller
         $searchParams = Yii::$app->request->queryParams;
         $dataProvider = $searchModel->search($searchParams);
 
+        // ниже считаем расходы по каждому приходу
+        $unicIncomeSearch = $searchModel->search($searchParams);
+
+        // сначала выберем уникальные идешники приходов
+        $incomeIds = $unicIncomeSearch->query->select('income_id')->distinct()->all();
+        unset($unicIncomeSearch);
+        $totalConsume = [];
+
+        // теперь для каждого идешника найдём имя ресурса и посчитаем общее количество использования
+        foreach ($incomeIds as $key => $model) {
+            $incomeConsumeSumSearch = $searchModel->search($searchParams);;
+
+            // всё слепим в массив, и так отдадим на вьюху
+            // TODO сделать что бы одинаковые ресурсы с разных инкамов суммировались
+            $totalConsume[] = [
+                'resource' => $model->income->resource->name,
+                'consumeAmount' => $incomeConsumeSumSearch->query
+                    ->andWhere(['income_id' => $model->income->id])
+                    ->sum('consume_amount')
+            ];
+        }
+
         return $this->render('index', [
             'dataProvider' => $dataProvider,
-            'searchModel' => $searchModel
+            'searchModel' => $searchModel,
+            'totalConsume' => $totalConsume
         ]);
     }
 

@@ -11,7 +11,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="category-index">
 
     <div class="row">
-        <div class="col-sm-2 col-md-5">
+        <div class="col-sm-2 col-md-5 text-right">
             <p>
                 <?php echo Html::a('Оприходовать', ['/consumption/income/create'], ['class' => 'btn btn-success']) ?>
             </p>

@@ -61,9 +61,8 @@ class Cost extends \yii\db\ActiveRecord
     public function getConsumeCost()
     {
         $income = $this->hasOne(Income::className(), ['id' => 'income_id'])->one();
-        if ($income !== null) {
-            $consumeCost = $income->price * $this->consume_amount;
-            return $consumeCost;
+        if ($income) {
+            return $income->price * $this->consume_amount;
         } else {
             return null;
         }

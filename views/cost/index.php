@@ -1,7 +1,8 @@
 <?php
 
-use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\helpers\Html;
+use yii\helpers\ArrayHelper;
 use kartik\grid\GridView;
 use nex\datepicker\DatePicker;
 
@@ -96,12 +97,34 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="total">
+                <h3>Итого</h3>
+                <p>
+                    <?php $consumptionCost = clone $dataProvider; ?>
+                    Сумма расходов: <?= number_format(array_sum(ArrayHelper::getColumn($consumptionCost->getModels(), 'consumeCost')), 2, ',', '.');?>
+                </p>
+                <p>
+                    <?php if (count($totalConsume) > 0) { ?>
+                        Расходы по ресурсам:
+                        <ul>
+                        <?php foreach ($totalConsume as $key => $consume) { ?>
+                            <li><?=$consume['resource']?> : <?=$consume['consumeAmount']?></li>
+                        <?php } ?>
+                        </ul>
+                    <?php } ?>
+                </p>
+            </div>
+        </div>
+    </div>
+
 
     <div class="row">
         <div class="col-sm-12">
             <?php echo GridView::widget([
                 'dataProvider' => $dataProvider,
-                // 'filterModel' => $searchModel,
+                'filterModel' => $searchModel,
                 'columns' => [
                     // 'id',
                     // 'transaction_id',
@@ -109,7 +132,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'label' => 'Объект',
                         'value' => function($model) {
                             if(!$model->transaction) {
-                                return null;    
+                                return null;
                             }
                             $elementModel = $model->transaction->element_model;
                             $element = $elementModel::findOne($model->transaction->element_id);
@@ -123,10 +146,10 @@ $this->params['breadcrumbs'][] = $this->title;
                         },
                         'filter' => false,
                     ],
-                    [
-                        'attribute' => 'income_id',
-                        'filter' => false,
-                    ],
+                    // [
+                    //     'attribute' => 'income_id',
+                    //     'filter' => false,
+                    // ],
                     [
                         'attribute' => 'consume_amount',
                         'filter' => false,
@@ -140,6 +163,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                     [
                         'attribute' => 'date',
+                        'filter' => false,
                         'value' => function($model) {
                             return date('d.m.Y H:i:s', strtotime($model->date));
                         },
