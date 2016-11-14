@@ -4,6 +4,7 @@ use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use kartik\grid\GridView;
+use yii\widgets\ListView;
 use nex\datepicker\DatePicker;
 
 
@@ -15,7 +16,7 @@ if($dateStop = yii::$app->request->get('date_stop')) {
     $dateStop = date('d.m.Y', strtotime($dateStop));
 }
 
-$this->title = 'Стоимости расходов';
+$this->title = 'Расходы';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="cost-index">
@@ -40,7 +41,6 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
         <div class="panel-body">
             <form action="" class="row search">
-                <input type="hidden" name="CostSearch[name]" value="" />
                 <div class="col-md-4">
                     <div class="row">
                         <div class="col-md-6">
@@ -60,6 +60,9 @@ $this->params['breadcrumbs'][] = $this->title;
                                     ['label' => 'Yesterday', 'url' => '#', 'value' => \Yii::$app->formatter->asDate('-1 day')],
                                     ['label' => 'Tomorrow', 'url' => '#', 'value' => \Yii::$app->formatter->asDate('+1 day')],
                                     ['label' => 'Some value', 'url' => '#', 'value' => 'Special value'],
+                                ],
+                                'options' => [
+                                    'autocomplete' => 'off'
                                 ],
                             ]);?>
                         </div>
@@ -81,6 +84,9 @@ $this->params['breadcrumbs'][] = $this->title;
                                     ['label' => yii::t('order', 'Tomorrow'), 'url' => '#', 'value' => \Yii::$app->formatter->asDate('+1 day')],
                                     ['label' => yii::t('order', 'Some value'), 'url' => '#', 'value' => 'Special value'],
                                 ],
+                                'options' => [
+                                    'autocomplete' => 'off'
+                                ],
                             ]);?>
                         </div>
                     </div>
@@ -98,33 +104,73 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-12 col-md-4">
             <div class="total">
                 <h3>Итого</h3>
                 <p>
-                    <?php $consumptionCost = clone $dataProvider; ?>
-                    Сумма расходов: <?= number_format(array_sum(ArrayHelper::getColumn($consumptionCost->getModels(), 'consumeCost')), 2, ',', '.');?>
+                    <strong>Общая стоимость расходов за период: <?= $totalCost ?></strong>
                 </p>
                 <p>
                     <?php if (count($totalConsume) > 0) { ?>
-                        Расходы по ресурсам:
-                        <ul>
-                        <?php foreach ($totalConsume as $key => $consume) { ?>
-                            <li><?=$consume['resource']?> : <?=$consume['consumeAmount']?></li>
-                        <?php } ?>
-                        </ul>
-                    <?php } ?>
+                        Общее количество расходов ресурсов за период:
+                        <table class="table table-bordered">
+                            <?php foreach ($totalConsume as $key => $consume) { ?>
+                                <tr>
+                                    <td>
+                                        <?=$consume['resource']?>
+                                    </td>
+                                    <td class="text-right">
+                                        <?=$consume['consumeAmount']?>
+                                    </td>
+                            <?php } ?>
+                        </table>
+                    <?php }  ?>
                 </p>
             </div>
         </div>
     </div>
 
 
+
+
     <div class="row">
         <div class="col-sm-12">
-            <?php echo GridView::widget([
-                'dataProvider' => $dataProvider,
-                'filterModel' => $searchModel,
+            <table class="table table-bordered">
+                <tr>
+                    <th>
+                        id заказа
+                    </th>
+                    <th>
+                        Услуга
+                    </th>
+                    <th>
+                        Расходники
+                    </th>
+                    <th>
+                        Расход
+                    </th>
+                    <th>
+                        Стоимость
+                    </th>
+                    <th>
+                        Дата
+                    </th>
+                </tr>
+                <?= ListView::widget([
+                        'dataProvider' => $dataProvider,
+                        'itemView' => '_consumeCostListItem',
+                        // 'layout' => "{summary}\n{items}\n{pager}"
+                    ]);
+                ?>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <?php /* echo GridView::widget([
+                'dataProvider' => $costDataProvider,
+                'filterModel' => $costSearchModel,
                 'columns' => [
                     // 'id',
                     // 'transaction_id',
@@ -170,7 +216,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         'options' => ['style' => 'width: 100px;'],
                     ]
                 ],
-            ]); ?>
+            ]);
+            */ ?>
         </div>
     </div>
 

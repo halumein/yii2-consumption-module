@@ -2,14 +2,16 @@
 
 namespace halumein\consumption\controllers;
 
-use halumein\consumption\models\search\CostSearch;
 use Yii;
-use halumein\consumption\models\Cost;
-use yii\data\ActiveDataProvider;
-use yii\filters\AccessControl;
 use yii\web\Controller;
-use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
+use yii\filters\AccessControl;
+use yii\data\ActiveDataProvider;
+use yii\web\NotFoundHttpException;
+use halumein\consumption\models\Cost;
+use halumein\consumption\models\search\CostSearch;
+use halumein\consumption\models\search\TransactionSearch;
 
 /**
  * CostController implements the CRUD actions for Cost model.
@@ -37,36 +39,43 @@ class CostController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new CostSearch();
-
+        // находим все транзакции (с фильтром, если задан) и сгруппируем их
+        // по элементам заказов, что бы найти все расходы на каждый элемент заказа
+        $searchModel = new TransactionSearch();
         $searchParams = Yii::$app->request->queryParams;
         $dataProvider = $searchModel->search($searchParams);
+        $dataProvider->query
+            ->andWhere(['!=', 'ident', 0])
+            ->andWhere(['deleted' => NULL])
+            ->groupBy(['ident', 'element_model', 'element_id']);
 
-        // ниже считаем расходы по каждому приходу
-        $unicIncomeSearch = $searchModel->search($searchParams);
 
-        // сначала выберем уникальные идешники приходов
-        $incomeIds = $unicIncomeSearch->query->select('income_id')->distinct()->all();
-        unset($unicIncomeSearch);
-        $totalConsume = [];
+        // отдельно посчитаем общую стоимость всех расходов
+        $costSearch = new CostSearch();
+        $costProvider = $costSearch->search(Yii::$app->request->queryParams);
+        $costProvider->setPagination(false);
+        $totalCost = number_format(array_sum(ArrayHelper::getColumn($costProvider->getModels(), 'consumeCost')), 2, ',', ' ');
 
-        // теперь для каждого идешника найдём имя ресурса и посчитаем общее количество использования
-        foreach ($incomeIds as $key => $model) {
-            $incomeConsumeSumSearch = $searchModel->search($searchParams);;
+        $costs = $costProvider->getModels();
 
-            // всё слепим в массив, и так отдадим на вьюху
-            // TODO сделать что бы одинаковые ресурсы с разных инкамов суммировались
-            $totalConsume[] = [
-                'resource' => $model->income->resource->name,
-                'consumeAmount' => $incomeConsumeSumSearch->query
-                    ->andWhere(['income_id' => $model->income->id])
-                    ->sum('consume_amount')
-            ];
+        // посчитаем общие количественные расходы по ресурсам
+        foreach ($costs as $key => $cost) {
+            if (!isset($consumeCounter[$cost->transaction->resource->id])) {
+                $consumeCounter[$cost->transaction->resource->id] = 0;
+            } else {
+                $consumeCounter[$cost->transaction->resource->id] += $cost->consume_amount;
+            }
+
+            $totalConsume[$cost->transaction->resource->id] = [
+                    'resource' => $cost->transaction->resource->name,
+                    'consumeAmount' => $consumeCounter[$cost->transaction->resource->id]
+                ];
         }
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
+            'totalCost' => $totalCost,
             'totalConsume' => $totalConsume
         ]);
     }
@@ -101,8 +110,6 @@ class CostController extends Controller
             $this->redirect('problem');
             Yii::$app->getSession()->setFlash('error', "Не выборано ни одной строки!");
         }
-
-
     }
 
     /**
@@ -126,7 +133,6 @@ class CostController extends Controller
         $get = Yii::$app->request->get();
         $id = $get['id'];
 
-
         $model = $this->findModel($id);
 //        echo "<pre>";
 //        var_dump($model);
@@ -134,7 +140,5 @@ class CostController extends Controller
         $array =  Yii::$app->consumption->setNullCost($model);
 
         return true;
-
-
     }
 }

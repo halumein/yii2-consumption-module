@@ -53,7 +53,7 @@ class CostSearch extends Cost
             ],
         ]);
 
-        if (!($this->load($params) && $this->validate())) {
+        if (!($this->load($params) && $this->validate()) && !isset($params['date_start']) && !isset($params['date_stop']) ) {
             return $dataProvider;
         }
 
@@ -66,16 +66,15 @@ class CostSearch extends Cost
             'income_id' => $this->income_id,
         ]);
 
-        if($dateStart = yii::$app->request->get('date_start')) {
+        if($dateStart = $params['date_start']) {
             $dateStart = date('Y-m-d', strtotime($dateStart));
             $query->andWhere('date >= :dateStart', [':dateStart' => $dateStart]);
         }
 
-        if($dateStop = yii::$app->request->get('date_stop')) {
+        if($dateStop = $params['date_stop']) {
             $dateStop = date('Y-m-d H:i:s', strtotime($dateStop)+86399);
             $query->andWhere('date <= :dateStop', [':dateStop' => $dateStop]);
         }
-
 
         return $dataProvider;
     }

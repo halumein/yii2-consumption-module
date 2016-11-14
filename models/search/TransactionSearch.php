@@ -54,7 +54,7 @@ class TransactionSearch extends Transaction
             ],
         ]);
 
-        if (!($this->load($params) && $this->validate())) {
+        if (!($this->load($params)) && $this->validate() && !isset($params['date_start']) && !isset($params['date_stop'])) {
             return $dataProvider;
         }
 
@@ -72,12 +72,12 @@ class TransactionSearch extends Transaction
 
         $query->andFilterWhere(['like', 'element_model', $this->element_model]);
 
-        if($dateStart = yii::$app->request->get('date_start')) {
+        if($dateStart = $params['date_start']) {
             $dateStart = date('Y-m-d', strtotime($dateStart));
             $query->andWhere('date >= :dateStart', [':dateStart' => $dateStart]);
         }
 
-        if($dateStop = yii::$app->request->get('date_stop')) {
+        if($dateStop = $params['date_stop']) {
             $dateStop = date('Y-m-d H:i:s', strtotime($dateStop)+86399);
             $query->andWhere('date <= :dateStop', [':dateStop' => $dateStop]);
         }

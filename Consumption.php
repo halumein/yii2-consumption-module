@@ -1,6 +1,7 @@
 <?php
 namespace halumein\consumption;
 
+use Yii;
 use halumein\consumption\models\Cost;
 use halumein\consumption\interfaces\Cost as CostInterface;
 use halumein\consumption\models\Income;
@@ -12,8 +13,8 @@ use halumein\consumption\models\Remain;
 use halumein\consumption\interfaces\Remain as RemainInterface;
 use halumein\consumption\models\Resource;
 use halumein\consumption\models\Category;
-use Yii;
 
+use yii\helpers\ArrayHelper;
 
 class Consumption implements TransactionInterface, NormInterface, RemainInterface, CostInterface
 {
@@ -359,4 +360,18 @@ class Consumption implements TransactionInterface, NormInterface, RemainInterfac
             return $costModel->errors;
         }
     }
+
+    // возвращает расходы по элементу ордера (на один за один заказ может быть несколько элементов на кажжый из которых производится расход ресурсов)
+    public function getCostsByOrderElement($ident, $element_model, $element_id)
+    {
+        $tranasctions = TransactionModel::find()
+                            ->where([
+                                'ident' => $ident,
+                                'element_model' => $element_model,
+                                'element_id' => $element_id,
+                            ])->all();
+
+        return $costs = Cost::find()->where(['transaction_id' => ArrayHelper::getColumn($tranasctions, 'id')])->all();
+    }
+
 }
