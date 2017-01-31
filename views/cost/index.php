@@ -5,6 +5,7 @@ use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use kartik\grid\GridView;
 use yii\widgets\ListView;
+use yii\bootstrap\Dropdown;
 use nex\datepicker\DatePicker;
 
 
@@ -15,6 +16,8 @@ if($dateStart = yii::$app->request->get('date_start')) {
 if($dateStop = yii::$app->request->get('date_stop')) {
     $dateStop = date('d.m.Y', strtotime($dateStop));
 }
+
+$resourceSelected =  yii::$app->request->get('resource_id');
 
 $this->title = 'Расходы';
 $this->params['breadcrumbs'][] = $this->title;
@@ -37,101 +40,116 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="panel panel-primary">
         <div class="panel-heading">
-            <h3 class="panel-title"><?=yii::t('order', 'Search');?></h3>
+            <h3 class="panel-title"><a href="#" onclick="$('.consumption-filter-body').toggleClass('hidden'); return false;">Фильтр</a></h3>
         </div>
-        <div class="panel-body">
-            <form action="" class="row search">
-                <div class="col-md-4">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <?= DatePicker::widget([
-                                'name' => 'date_start',
-                                'addon' => false,
-                                'value' => $dateStart,
-                                'size' => 'sm',
-                                'language' => 'ru',
-                                'placeholder' => yii::t('order', 'Date from'),
-                                'clientOptions' => [
-                                    'format' => 'L',
-                                    'minDate' => '2015-01-01',
-                                    'maxDate' => date('Y-m-d'),
-                                ],
-                                'dropdownItems' => [
-                                    ['label' => 'Yesterday', 'url' => '#', 'value' => \Yii::$app->formatter->asDate('-1 day')],
-                                    ['label' => 'Tomorrow', 'url' => '#', 'value' => \Yii::$app->formatter->asDate('+1 day')],
-                                    ['label' => 'Some value', 'url' => '#', 'value' => 'Special value'],
-                                ],
-                                'options' => [
-                                    'autocomplete' => 'off'
-                                ],
-                            ]);?>
+        <div class="panel-body consumption-filter-body">
+            <form action="" class="search">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <?= DatePicker::widget([
+                                    'name' => 'date_start',
+                                    'addon' => false,
+                                    'value' => $dateStart,
+                                    'size' => 'sm',
+                                    'language' => 'ru',
+                                    'placeholder' => yii::t('order', 'Date from'),
+                                    'clientOptions' => [
+                                        'format' => 'L',
+                                        'minDate' => '2015-01-01',
+                                        'maxDate' => date('Y-m-d'),
+                                    ],
+                                    'dropdownItems' => [
+                                        ['label' => 'Yesterday', 'url' => '#', 'value' => \Yii::$app->formatter->asDate('-1 day')],
+                                        ['label' => 'Tomorrow', 'url' => '#', 'value' => \Yii::$app->formatter->asDate('+1 day')],
+                                        ['label' => 'Some value', 'url' => '#', 'value' => 'Special value'],
+                                    ],
+                                    'options' => [
+                                        'autocomplete' => 'off'
+                                    ],
+                                ]);?>
+                            </div>
+                            <div class="col-md-6">
+                                <?= DatePicker::widget([
+                                    'name' => 'date_stop',
+                                    'addon' => false,
+                                    'value' => $dateStop,
+                                    'size' => 'sm',
+                                    'placeholder' => yii::t('order', 'Date to'),
+                                    'language' => 'ru',
+                                    'clientOptions' => [
+                                        'format' => 'L',
+                                        'minDate' => '2015-01-01',
+                                        'maxDate' => date('Y-m-d'),
+                                    ],
+                                    'dropdownItems' => [
+                                        ['label' => yii::t('order', 'Yesterday'), 'url' => '#', 'value' => \Yii::$app->formatter->asDate('-1 day')],
+                                        ['label' => yii::t('order', 'Tomorrow'), 'url' => '#', 'value' => \Yii::$app->formatter->asDate('+1 day')],
+                                        ['label' => yii::t('order', 'Some value'), 'url' => '#', 'value' => 'Special value'],
+                                    ],
+                                    'options' => [
+                                        'autocomplete' => 'off'
+                                    ],
+                                ]);?>
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <?= DatePicker::widget([
-                                'name' => 'date_stop',
-                                'addon' => false,
-                                'value' => $dateStop,
-                                'size' => 'sm',
-                                'placeholder' => yii::t('order', 'Date to'),
-                                'language' => 'ru',
-                                'clientOptions' => [
-                                    'format' => 'L',
-                                    'minDate' => '2015-01-01',
-                                    'maxDate' => date('Y-m-d'),
-                                ],
-                                'dropdownItems' => [
-                                    ['label' => yii::t('order', 'Yesterday'), 'url' => '#', 'value' => \Yii::$app->formatter->asDate('-1 day')],
-                                    ['label' => yii::t('order', 'Tomorrow'), 'url' => '#', 'value' => \Yii::$app->formatter->asDate('+1 day')],
-                                    ['label' => yii::t('order', 'Some value'), 'url' => '#', 'value' => 'Special value'],
-                                ],
-                                'options' => [
-                                    'autocomplete' => 'off'
-                                ],
-                            ]);?>
-                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <input class="form-control btn-success" type="submit" value="Поиск" />
+                    </div>
+
+                    <div class="col-md-3">
+                        <a class="btn btn-default" href="<?= Url::to(['/consumption/cost/index']) ?>">Cбросить все фильтры</a>
                     </div>
                 </div>
 
-                <div class="col-md-2">
-                    <input class="form-control btn-success" type="submit" value="Поиск" />
+                <br>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <?= Html::dropDownList('resource_id', $resourceSelected, ArrayHelper::map($resourceList, 'id', 'name'), ['class' => 'form-control', 'prompt' => 'Расходник', 'onchange' => 'submit();']) ?>
+                    </div>
                 </div>
 
-                <div class="col-md-3">
-                    <a class="btn btn-default" href="<?= Url::to(['/consumption/cost/index']) ?>">Cбросить все фильтры</a>
-                </div>
             </form>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-sm-12 col-md-4">
-            <div class="total">
-                <h3>Итого</h3>
-                <p>
-                    <strong>Общая стоимость расходов за период: <?= $totalCost ?></strong>
-                </p>
-                <p>
-                    <?php if (count($totalConsume) > 0) { ?>
-                        Общее количество расходов ресурсов за период:
-                        <table class="table table-bordered">
-                            <?php foreach ($totalConsume as $key => $consume) { ?>
-                                <tr>
-                                    <td>
-                                        <?=$consume['resource']?>
-                                    </td>
-                                    <td class="text-right">
-                                        <?=$consume['consumeAmount']?>
-                                    </td>
-                            <?php } ?>
-                        </table>
-                    <?php }  ?>
-                </p>
+
+
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title"><a href="#" onclick="$('.consumption-totals-body').toggleClass('hidden'); return false;">Статистика</a></h3>
+        </div>
+        <div class="panel-body consumption-totals-body hidden">
+            <div class="row">
+                <div class="col-sm-12 col-md-4">
+                    <div class="total">
+                        <p>
+                            <strong>Общая стоимость расходов за период: <?= $totalCost ?></strong>
+                        </p>
+                        <p>
+                            <?php if (count($totalConsume) > 0) { ?>
+                                Общее количество расходов ресурсов за период:
+                                <table class="table table-bordered">
+                                    <?php foreach ($totalConsume as $key => $consume) { ?>
+                                        <tr>
+                                            <td>
+                                                <?=$consume['resource']?>
+                                            </td>
+                                            <td class="text-right">
+                                                <?=$consume['consumeAmount']?>
+                                            </td>
+                                    <?php } ?>
+                                </table>
+                            <?php }  ?>
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
-
-
 
     <div class="row">
         <div class="col-sm-12">
@@ -156,6 +174,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         Дата
                     </th>
                 </tr>
+
                 <?= ListView::widget([
                         'dataProvider' => $dataProvider,
                         'itemView' => '_consumeCostListItem',

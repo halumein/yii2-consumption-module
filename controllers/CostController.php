@@ -10,6 +10,7 @@ use yii\filters\AccessControl;
 use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
 use halumein\consumption\models\Cost;
+use halumein\consumption\models\Resource;
 use halumein\consumption\models\search\CostSearch;
 use halumein\consumption\models\search\TransactionSearch;
 
@@ -47,8 +48,14 @@ class CostController extends Controller
         $dataProvider->query
             ->andWhere(['!=', 'ident', 0])
             ->andWhere(['deleted' => NULL])
+            ->andWhere(['type' => 'outcome'])
             ->groupBy(['ident', 'element_model', 'element_id']);
 
+        if (Yii::$app->request->getQueryParam('resource_id')) {
+            $dataProvider->query->andWhere(['resource_id' => Yii::$app->request->getQueryParam('resource_id')]);
+        }
+
+        $resourceList = Resource::find()->all();
 
         // отдельно посчитаем общую стоимость всех расходов
         $costSearch = new CostSearch();
@@ -57,6 +64,8 @@ class CostController extends Controller
         $totalCost = number_format(array_sum(ArrayHelper::getColumn($costProvider->getModels(), 'consumeCost')), 2, ',', ' ');
 
         $costs = $costProvider->getModels();
+
+
 
         // посчитаем общие количественные расходы по ресурсам
         foreach ($costs as $key => $cost) {
@@ -76,7 +85,8 @@ class CostController extends Controller
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
             'totalCost' => $totalCost,
-            'totalConsume' => $totalConsume
+            'totalConsume' => $totalConsume,
+            'resourceList' => $resourceList,
         ]);
     }
 
