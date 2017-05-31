@@ -68,6 +68,7 @@ class CostController extends Controller
 
 
         // посчитаем общие количественные расходы по ресурсам
+        $totalConsume = [];
         foreach ($costs as $key => $cost) {
             if (!isset($consumeCounter[$cost->transaction->resource->id])) {
                 $consumeCounter[$cost->transaction->resource->id] = 0;
